@@ -8,9 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "NODE_ENV=LOCAL nest start",
-    "start:dev": "NODE_ENV=LOCAL nest start --watch",
-    "start:debug": "nest start --debug --watch",
+    "start": "TZ=UTC NODE_ENV=LOCAL nest start",
+    "start:dev": "TZ=UTC NODE_ENV=LOCAL nest start --watch",
     "start:prod": "pm2 start ecosystem.config.js --only prod --env prod",
     "reload:prod": "pm2 reload ecosystem.config.js --only prod --env prod",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
