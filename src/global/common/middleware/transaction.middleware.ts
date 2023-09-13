@@ -9,10 +9,7 @@ export class TransactionMiddleware implements NestMiddleware {
   constructor(private readonly em: EntityManager) {}
   use(_req: Request, _res: Response, next: NextFunction) {
     const namespace = GlobalContextUtil.getMainNamespace();
-
-    namespace.run(() => {
-      namespace.set(NAMESPACE_ENTITY_MANAGER, this.em);
-      next();
-    });
+    namespace.set(NAMESPACE_ENTITY_MANAGER, this.em);
+    next();
   }
 }
