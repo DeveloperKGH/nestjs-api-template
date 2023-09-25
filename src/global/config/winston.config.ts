@@ -15,6 +15,13 @@ const dailyOptions = (level: string) => {
     handleExceptions: true,
     json: false,
     format: winston.format.combine(
+      winston.format(info => {
+        if (info.level !== level) {
+          return false;
+        }
+
+        return info;
+      })(),
       winston.format.timestamp(),
       winston.format.printf(info => {
         return `[aja-aja-api] ${process.pid} - ${info.timestamp} - ${info.level}  : ${info.message} `;
