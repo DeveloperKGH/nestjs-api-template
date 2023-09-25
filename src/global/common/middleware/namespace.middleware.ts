@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { createNamespace, getNamespace } from 'cls-hooked';
 import { NAMESPACE_NESTJS_API_TEMPLATE } from '../constant/namespace.code';
 

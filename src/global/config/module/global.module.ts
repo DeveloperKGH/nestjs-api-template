@@ -10,8 +10,14 @@ import { MemberModule } from '../../../member/member.module';
 import { EventListenerModule } from './event-listener.module';
 import { TypeormConfigModule } from './typeorm-config.module';
 import { AuthModule } from '../../../auth/auth.module';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpStatusInterceptor } from '../../interceptor/http-status.interceptor';
+import { GlobalExceptionFilter } from '../../filter/global-exception.filter';
+import { WinstonConfigModule } from './winston-config.module';
+import { HeaderMiddleware } from '../../common/middleware/header.middleware';
+import { LoggingMiddleware } from '../../common/middleware/logging.middleware';
 
-const modules = [TypeormConfigModule, EventListenerModule, MemberModule, AuthModule];
+const modules = [TypeormConfigModule, WinstonConfigModule, EventListenerModule, MemberModule, AuthModule];
 
 @Global()
 @Module({
@@ -25,6 +31,14 @@ const modules = [TypeormConfigModule, EventListenerModule, MemberModule, AuthMod
     {
       provide: RefreshTokenEncrypter,
       useClass: RefreshTokenBcrypter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpStatusInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
   ],
   exports: [
@@ -41,6 +55,6 @@ const modules = [TypeormConfigModule, EventListenerModule, MemberModule, AuthMod
 })
 export class GlobalModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(NamespaceMiddleware, TransactionMiddleware).forRoutes('*');
+    consumer.apply(NamespaceMiddleware, HeaderMiddleware, TransactionMiddleware, LoggingMiddleware).forRoutes('*');
   }
 }

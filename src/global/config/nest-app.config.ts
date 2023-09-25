@@ -2,8 +2,6 @@ import { ClassSerializerInterceptor, INestApplication, ValidationPipe, Versionin
 import { ValidationError } from 'class-validator';
 import { BadRequestException } from '../exception/bad-request.exception';
 import { Reflector } from '@nestjs/core';
-import { GlobalExceptionFilter } from '../filter/global-exception.filter';
-import { HttpStatusInterceptor } from '../interceptor/http-status.interceptor';
 
 export function setNestApp<T extends INestApplication>(app: T) {
   // ValidationPipe 를 전역적으로 사용하도록 설정
@@ -27,10 +25,7 @@ export function setNestApp<T extends INestApplication>(app: T) {
 
   // ClassSerializerInterceptor : 응답을 보내기 전에 데이터를 직렬화하는 데 사용.
   // HttpStatusInterceptor : POST 응답 http status 201 이 아닌 200 으로 반환하도록 처리
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)), new HttpStatusInterceptor());
-
-  // 모든 예외를 처리하기 위한 전역 필터를 설정.
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   // API 버전 관리 활성화. URL 기반 버전 관리 사용.
   app.enableVersioning({ type: VersioningType.URI });

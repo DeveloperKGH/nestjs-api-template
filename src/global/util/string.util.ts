@@ -1,5 +1,6 @@
 export class StringUtil {
   private static readonly HYPHEN_REGEXP = new RegExp('-', 'g');
+  private static readonly MASKING_VALUE = '******';
 
   public static isEmpty(value: string | null | undefined): boolean {
     return !value || value.trim() === '';
@@ -37,5 +38,13 @@ export class StringUtil {
     }
 
     return value.split(delimiter);
+  }
+
+  public static mask(value: string): string | null {
+    if (!value) {
+      return null;
+    }
+
+    return this.MASKING_VALUE;
   }
 }
