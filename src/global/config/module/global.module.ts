@@ -4,8 +4,8 @@ import { PasswordEncrypter } from '../../../auth/domain/password-encrypter.servi
 import { PasswordBcrypter } from '../../../auth/domain/password-bcrypter.service';
 import { RefreshTokenEncrypter } from '../../../auth/domain/refresh-token-encrypter.service';
 import { RefreshTokenBcrypter } from '../../../auth/domain/refresh-token-bcrypter.service';
-import { TransactionMiddleware } from '../../common/middleware/transaction.middleware';
-import { NamespaceMiddleware } from '../../common/middleware/namespace.middleware';
+import { TransactionMiddleware } from '../../middleware/transaction.middleware';
+import { NamespaceMiddleware } from '../../middleware/namespace.middleware';
 import { MemberModule } from '../../../member/member.module';
 import { EventListenerModule } from './event-listener.module';
 import { TypeormConfigModule } from './typeorm-config.module';
@@ -14,8 +14,8 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpStatusInterceptor } from '../../interceptor/http-status.interceptor';
 import { GlobalExceptionFilter } from '../../filter/global-exception.filter';
 import { WinstonConfigModule } from './winston-config.module';
-import { HeaderMiddleware } from '../../common/middleware/header.middleware';
-import { LoggingMiddleware } from '../../common/middleware/logging.middleware';
+import { HeaderMiddleware } from '../../middleware/header.middleware';
+import { LoggingInterceptor } from '../../interceptor/logging.interceptor';
 
 const modules = [TypeormConfigModule, WinstonConfigModule, EventListenerModule, MemberModule, AuthModule];
 
@@ -31,6 +31,10 @@ const modules = [TypeormConfigModule, WinstonConfigModule, EventListenerModule, 
     {
       provide: RefreshTokenEncrypter,
       useClass: RefreshTokenBcrypter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
@@ -55,6 +59,6 @@ const modules = [TypeormConfigModule, WinstonConfigModule, EventListenerModule, 
 })
 export class GlobalModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(NamespaceMiddleware, HeaderMiddleware, TransactionMiddleware, LoggingMiddleware).forRoutes('*');
+    consumer.apply(NamespaceMiddleware, HeaderMiddleware, TransactionMiddleware).forRoutes('*');
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { GlobalContextUtil } from '../../util/global-context.util';
-import { RandomUtil } from '../../util/random.util';
-import { HeaderContextDto } from '../../context/header-context.dto';
+import { GlobalContextUtil } from '../util/global-context.util';
+import { RandomUtil } from '../util/random.util';
+import { HeaderContextDto } from '../context/header-context.dto';
 import { LocalDateTime } from '@js-joda/core';
 
 @Injectable()
