@@ -1,6 +1,7 @@
 import {
   convert,
   DateTimeFormatter,
+  Duration,
   LocalDate,
   LocalDateTime,
   LocalTime,
@@ -75,5 +76,9 @@ export class TimeUtil {
     return ZonedDateTime.of(LocalDateTime.of(LocalDate.now(TimeUtil.KST_ZONE_ID), LocalTime.MAX), TimeUtil.KST_ZONE_ID)
       .withZoneSameInstant(TimeUtil.UTC_ZONE_ID)
       .toLocalDateTime();
+  }
+
+  static getMillisOfDuration(from: LocalDateTime, to: LocalDateTime): number {
+    return Duration.between(from, to).toMillis();
   }
 }

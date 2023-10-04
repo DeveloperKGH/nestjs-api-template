@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from 'express';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GlobalContextUtil } from '../../util/global-context.util';
+import { TimeUtil } from '../../util/time.util';
+import { LocalDateTime } from '@js-joda/core';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
@@ -32,6 +34,7 @@ export class LoggingMiddleware implements NestMiddleware {
           ip: headerContext.ip,
           userAgent: headerContext.userAgent,
           member: member,
+          executionTime: `${TimeUtil.getMillisOfDuration(headerContext.startTime, LocalDateTime.now())} ms`,
         };
 
         process.env.NODE_ENV === 'prod'

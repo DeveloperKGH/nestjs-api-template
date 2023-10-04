@@ -4,12 +4,14 @@ import { instanceToPlain } from 'class-transformer';
 import { GlobalContextUtil } from '../util/global-context.util';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+import { TimeUtil } from '../util/time.util';
+import { LocalDateTime } from '@js-joda/core';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
 
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
@@ -39,6 +41,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         userAgent: headerContext.userAgent,
         message: message,
         stacktrace: stacktrace,
+        executionTime: `${TimeUtil.getMillisOfDuration(headerContext.startTime, LocalDateTime.now())} ms`,
       };
 
       if (status < 500) {

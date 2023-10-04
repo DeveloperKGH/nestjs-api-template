@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { StringUtil } from '../util/string.util';
+import { LocalDateTime } from '@js-joda/core';
 
 export class HeaderContextDto {
   private static readonly SENSITIVE_FIELDS = ['password'];
@@ -11,6 +12,7 @@ export class HeaderContextDto {
   private readonly _url: string;
   private readonly _requestBody: any;
   private readonly _queryParams: any;
+  private readonly _startTime: LocalDateTime;
 
   private constructor(
     transactionId: string,
@@ -20,6 +22,7 @@ export class HeaderContextDto {
     url: string,
     requestBody: any,
     queryParams: any,
+    startTime: LocalDateTime,
   ) {
     this._transactionId = transactionId;
     this._userAgent = userAgent;
@@ -28,6 +31,7 @@ export class HeaderContextDto {
     this._url = url;
     this._requestBody = requestBody;
     this._queryParams = queryParams;
+    this._startTime = startTime;
   }
 
   public static of(
@@ -38,11 +42,12 @@ export class HeaderContextDto {
     url: string,
     requestBody: any,
     queryParams: any,
+    startTime: LocalDateTime,
   ): HeaderContextDto {
     requestBody = this.maskSensitiveFields(cloneDeep(requestBody));
     queryParams = this.maskSensitiveFields(cloneDeep(queryParams));
 
-    return new HeaderContextDto(transactionId, userAgent, ip, httpMethod, url, requestBody, queryParams);
+    return new HeaderContextDto(transactionId, userAgent, ip, httpMethod, url, requestBody, queryParams, startTime);
   }
 
   get transactionId(): string {
@@ -71,6 +76,10 @@ export class HeaderContextDto {
 
   get queryParams(): any {
     return this._queryParams;
+  }
+
+  get startTime(): LocalDateTime {
+    return this._startTime;
   }
 
   private static maskSensitiveFields(obj: any): any {
