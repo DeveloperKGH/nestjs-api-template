@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { StringUtil } from '../util/string.util';
 import { LocalDateTime } from '@js-joda/core';
+import { RandomUtil } from '../util/random.util';
 
 export class HeaderContextDto {
   private static readonly SENSITIVE_FIELDS = ['password'];
@@ -48,6 +49,26 @@ export class HeaderContextDto {
     queryParams = this.maskSensitiveFields(cloneDeep(queryParams));
 
     return new HeaderContextDto(transactionId, userAgent, ip, httpMethod, url, requestBody, queryParams, startTime);
+  }
+
+  public static createDefault(
+    userAgent: string | undefined,
+    ip: string,
+    httpMethod: string,
+    url: string,
+    requestBody: any,
+    queryParams: any,
+  ) {
+    return new HeaderContextDto(
+      RandomUtil.generateUuidV4(),
+      userAgent,
+      ip,
+      httpMethod,
+      url,
+      requestBody,
+      queryParams,
+      LocalDateTime.now(),
+    );
   }
 
   get transactionId(): string {

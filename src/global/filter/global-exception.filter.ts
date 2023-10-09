@@ -6,6 +6,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { TimeUtil } from '../util/time.util';
 import { LocalDateTime } from '@js-joda/core';
+import { HeaderContextDto } from '../context/header-context.dto';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -13,6 +14,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+    const request = ctx.getRequest();
     const response = ctx.getResponse();
 
     const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
@@ -24,13 +26,24 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     response.status(status).json(instanceToPlain(baseResponse));
 
-    this.logError(status, message, stacktrace);
+    let headerContext = GlobalContextUtil.getHeader();
+
+    if (!headerContext) {
+      headerContext = HeaderContextDto.createDefault(
+        request.get('user-agent'),
+        request.ip,
+        request.method,
+        request.originalUrl,
+        request.body,
+        request.query,
+      );
+    }
+
+    this.logError(status, message, stacktrace, headerContext);
   }
 
-  private logError(status: number, message: string, stacktrace: string) {
+  private logError(status: number, message: string, stacktrace: string, headerContext: HeaderContextDto) {
     try {
-      const headerContext = GlobalContextUtil.getHeader();
-
       const body = {
         transactionId: headerContext.transactionId,
         status: status,
