@@ -12,14 +12,20 @@ export abstract class BaseAuditEntity extends BaseEntity {
   @Column({ type: 'bigint', unsigned: true, transformer: new BigintTransformer() })
   public updatedBy: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', transformer: new LocalDateTimeTransformer() })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    transformer: new LocalDateTimeTransformer(),
+    precision: 3,
+  })
   public createdAt: LocalDateTime;
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    onUpdate: 'CURRENT_TIMESTAMP(3)',
     transformer: new LocalDateTimeTransformer(),
+    precision: 3,
   })
   public updatedAt: LocalDateTime;
 

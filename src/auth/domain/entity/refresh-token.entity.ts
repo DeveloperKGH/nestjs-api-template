@@ -25,10 +25,15 @@ export class RefreshToken extends BaseEntity {
   @Column({ type: 'varchar', length: 60 })
   public token: string;
 
-  @Column({ type: 'timestamp', transformer: new LocalDateTimeTransformer() })
+  @Column({ type: 'timestamp', transformer: new LocalDateTimeTransformer(), precision: 3 })
   public readonly expiresAt: LocalDateTime;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', transformer: new LocalDateTimeTransformer() })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    transformer: new LocalDateTimeTransformer(),
+    precision: 3,
+  })
   public createdAt: LocalDateTime;
 
   @BeforeInsert()

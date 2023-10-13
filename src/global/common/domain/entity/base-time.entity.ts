@@ -4,14 +4,20 @@ import { LocalDateTimeTransformer } from '../../infra/transformer/local-date-tim
 import { BaseEntity } from './base.entity';
 
 export abstract class BaseTimeEntity extends BaseEntity {
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', transformer: new LocalDateTimeTransformer() })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    transformer: new LocalDateTimeTransformer(),
+    precision: 3,
+  })
   createdAt: LocalDateTime;
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    onUpdate: 'CURRENT_TIMESTAMP(3)',
     transformer: new LocalDateTimeTransformer(),
+    precision: 3,
   })
   updatedAt: LocalDateTime;
 

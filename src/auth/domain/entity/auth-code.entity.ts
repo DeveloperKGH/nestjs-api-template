@@ -31,13 +31,18 @@ export class AuthCode extends BaseEntity {
   @Column({ type: 'varchar', length: 50 })
   public readonly code: string;
 
-  @Column({ type: 'timestamp', transformer: new LocalDateTimeTransformer() })
+  @Column({ type: 'timestamp', transformer: new LocalDateTimeTransformer(), precision: 3 })
   public readonly expiresAt: LocalDateTime;
 
   @Column({ type: 'tinyint', default: false, transformer: new BooleanTransformer() })
   public isVerified: boolean;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', transformer: new LocalDateTimeTransformer() })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    transformer: new LocalDateTimeTransformer(),
+    precision: 3,
+  })
   public createdAt: LocalDateTime;
 
   @BeforeInsert()
