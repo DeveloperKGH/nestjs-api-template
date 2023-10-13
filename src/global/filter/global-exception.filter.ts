@@ -7,6 +7,7 @@ import { Logger } from 'winston';
 import { TimeUtil } from '../util/time.util';
 import { LocalDateTime } from '@js-joda/core';
 import { HeaderContextDto } from '../context/header-context.dto';
+import { MemberContextDto } from '../context/member-context.dto';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -26,7 +27,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     response.status(status).json(instanceToPlain(baseResponse));
 
-    let headerContext = GlobalContextUtil.getHeader();
+    let headerContext = null;
+    let member = null;
+
+    try {
+      headerContext = GlobalContextUtil.getHeader();
+      member = GlobalContextUtil.getMember();
+    } catch (e) {}
 
     if (!headerContext) {
       headerContext = HeaderContextDto.createDefault(
@@ -39,10 +46,16 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       );
     }
 
-    this.logError(status, message, stacktrace, headerContext);
+    this.logError(status, message, stacktrace, headerContext, member);
   }
 
-  private logError(status: number, message: string, stacktrace: string, headerContext: HeaderContextDto) {
+  private logError(
+    status: number,
+    message: string,
+    stacktrace: string,
+    headerContext: HeaderContextDto,
+    memberContext: MemberContextDto | null,
+  ) {
     try {
       const body = {
         transactionId: headerContext.transactionId,
@@ -54,6 +67,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         userAgent: headerContext.userAgent,
         message: message,
         stacktrace: stacktrace,
+        member: memberContext,
         executionTime: `${TimeUtil.getMillisOfDuration(headerContext.startTime, LocalDateTime.now())} ms`,
       };
 
