@@ -10,7 +10,7 @@ export const TypeormConfig = (): TypeOrmModuleOptions => ({
   database: process.env.DB_DATABASE,
   entities: [__dirname + '/../../**/*.{js,ts}'],
   logging: false,
-  synchronize: true,
+  synchronize: false,
   timezone: '+00:00',
   namingStrategy: new SnakeNamingStrategy(),
 });
