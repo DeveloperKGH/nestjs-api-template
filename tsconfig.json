@@ -23,5 +23,6 @@
     "incremental": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": false,
-  }
+  },
+  "include": ["src/**/*"]
 }
