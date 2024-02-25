@@ -12,13 +12,12 @@ import { HttpStatusInterceptor } from '../../interceptor/http-status.interceptor
 import { GlobalExceptionFilter } from '../../filter/global-exception.filter';
 import { LoggingInterceptor } from '../../interceptor/logging.interceptor';
 import { WinstonConfigModule } from '../../logger/winston/winston-config.module';
-import { getTypeormConnection } from '../typeorm.config';
 import { NamespaceInterceptor } from '../../interceptor/namespace.interceptor';
-import { TypeormEntityManagerInterceptor } from '../../interceptor/typeorm-entity-manager.interceptor';
 import { MemberContextInterceptor } from '../../interceptor/member-context.interceptor';
 import { RequestContextInterceptor } from '../../interceptor/request-context.interceptor';
+import { TypeormModule } from '../../infra/typeorm/typeorm.module';
 
-const modules = [getTypeormConnection(), WinstonConfigModule.forRoot(), EventListenerModule, MemberModule, AuthModule];
+const modules = [WinstonConfigModule.forRoot(), EventListenerModule, MemberModule, AuthModule, TypeormModule];
 
 @Global()
 @Module({
@@ -36,10 +35,6 @@ const modules = [getTypeormConnection(), WinstonConfigModule.forRoot(), EventLis
     {
       provide: APP_INTERCEPTOR,
       useClass: NamespaceInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: TypeormEntityManagerInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,

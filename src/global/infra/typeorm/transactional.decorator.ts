@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
-import { NAMESPACE_NESTJS_API_TEMPLATE, NAMESPACE_ENTITY_MANAGER } from '../constant/namespace.code';
-import { InternalServerException } from '../exception/internal-server.exception';
-import { GlobalContextUtil } from '../util/global-context.util';
+import { NAMESPACE_NESTJS_API_TEMPLATE, NAMESPACE_ENTITY_MANAGER } from '../../constant/namespace.code';
+import { InternalServerException } from '../../exception/internal-server.exception';
+import { GlobalContextUtil } from '../../util/global-context.util';
 
 export enum Propagation {
   REQUIRED,

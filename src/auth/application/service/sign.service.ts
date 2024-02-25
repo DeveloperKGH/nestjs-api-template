@@ -8,7 +8,7 @@ import { TokenServiceDto } from '../dto/token.service.dto';
 import { JwtTokenService } from './jwt-token.service';
 import { UnauthorizedException } from '../../../global/exception/unauthorized.exception';
 import { PasswordEncrypterServiceToken } from '../../domain/service/password-encrypter.service';
-import { Transactional } from '../../../global/decorator/transactional.decorator';
+import { Transactional } from '../../../global/infra/typeorm/transactional.decorator';
 import { RefreshTokenEncrypterService } from '../../domain/service/refresh-token-encrypter.service';
 
 @Injectable()

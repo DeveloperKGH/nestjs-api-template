@@ -10,7 +10,7 @@ import {
   PasswordEncrypterServiceToken,
 } from '../../../auth/domain/service/password-encrypter.service';
 import { BadRequestException } from '../../../global/exception/bad-request.exception';
-import { Transactional } from '../../../global/decorator/transactional.decorator';
+import { Transactional } from '../../../global/infra/typeorm/transactional.decorator';
 import { WithdrawnMember } from '../../infra/typeorm/entity/withdrawn-member.entity';
 import { WithdrawnMemberCommandRepository } from '../../domain/repository/withdrawn-member-command.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';

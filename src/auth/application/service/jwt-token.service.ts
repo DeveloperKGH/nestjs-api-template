@@ -11,7 +11,7 @@ import {
   RefreshTokenEncrypterServiceToken,
 } from '../../domain/service/refresh-token-encrypter.service';
 import { UnauthorizedException } from '../../../global/exception/unauthorized.exception';
-import { Propagation, Transactional } from '../../../global/decorator/transactional.decorator';
+import { Propagation, Transactional } from '../../../global/infra/typeorm/transactional.decorator';
 
 @Injectable()
 export class JwtTokenService {

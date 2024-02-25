@@ -10,7 +10,7 @@ import { BadRequestException } from '../../../global/exception/bad-request.excep
 import { AuthCodeType } from '../../domain/enum/auth-code-type.enum';
 import { TooManyRequestsException } from '../../../global/exception/too-many-requests.exception';
 import { Member } from '../../../member/infra/typeorm/entity/member.entity';
-import { Propagation, Transactional } from '../../../global/decorator/transactional.decorator';
+import { Propagation, Transactional } from '../../../global/infra/typeorm/transactional.decorator';
 import { ResetPasswordServiceDto } from '../dto/reset-password.service.dto';
 import {
   PasswordEncrypterService,
