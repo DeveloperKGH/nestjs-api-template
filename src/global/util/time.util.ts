@@ -8,14 +8,17 @@ import {
   nativeJs,
   ZonedDateTime,
   ZoneId,
+  ZoneOffset,
 } from '@js-joda/core';
 import '@js-joda/timezone';
+import { BadRequestException } from '../exception/bad-request.exception';
 
 export class TimeUtil {
-  private static DATE_FORMATTER = DateTimeFormatter.ofPattern('yyyy-MM-dd');
-  private static DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss');
-  private static UTC_ZONE_ID = ZoneId.of('UTC');
-  private static KST_ZONE_ID = ZoneId.of('Asia/Seoul');
+  private static readonly DATE_FORMATTER = DateTimeFormatter.ofPattern('yyyy-MM-dd');
+  private static readonly DATE_TIME_FORMATTER = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+  private static readonly UTC_ZONE_ID = ZoneId.of('UTC');
+  private static readonly KST_ZONE_ID = ZoneId.of('Asia/Seoul');
+  private static readonly ISO_8601_REGEXP = new RegExp(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/);
 
   static toString(value: LocalDate | LocalDateTime): string | null {
     if (!value) {
@@ -25,7 +28,8 @@ export class TimeUtil {
     if (value instanceof LocalDate) {
       return value.format(this.DATE_FORMATTER);
     }
-    return value.format(this.DATE_TIME_FORMATTER);
+
+    return value.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
   }
 
   static toDate(localDate: LocalDate | LocalDateTime): Date | null {
@@ -63,7 +67,11 @@ export class TimeUtil {
       return null;
     }
 
-    return LocalDateTime.parse(strDate, TimeUtil.DATE_TIME_FORMATTER);
+    if (!this.ISO_8601_REGEXP.test(strDate)) {
+      throw new BadRequestException(BadRequestException.ErrorCodes.INVALID_ISO_8601_FORMAT);
+    }
+
+    return ZonedDateTime.parse(strDate, this.DATE_TIME_FORMATTER).toLocalDateTime();
   }
 
   static getStartOfTodayInKSTAsUTC(): LocalDateTime {

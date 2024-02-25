@@ -8,6 +8,7 @@ export class BadRequestException extends BaseException {
     FAILED_TO_VERIFY_AUTH_CODE: ErrorCode.create(400001, '인증번호가 맞지 않습니다.'),
     INVALID_PASSWORD: ErrorCode.create(400002, '기존 비밀번호가 맞지 않습니다.'),
     INVALID_SORT_OPTION: ErrorCode.create(400003, '유효하지 않은 Sort Option입니다.'),
+    INVALID_ISO_8601_FORMAT: ErrorCode.create(400004, 'ISO 8601 형식이 아닙니다.'),
   };
 
   constructor(errorCode: ErrorCode, data?: any) {
