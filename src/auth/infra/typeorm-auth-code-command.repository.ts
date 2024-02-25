@@ -4,11 +4,11 @@ import { AuthCodeCommandRepository } from '../domain/repository/auth-code-comman
 import { AuthCode } from '../domain/entity/auth-code.entity';
 import { AuthCodeType } from '../domain/enum/auth-code-type.enum';
 import { TimeUtil } from '../../global/util/time.util';
-import { TypeormBaseRepository } from '../../global/common/infra/repository/typeorm-base.repository';
+import { TypeormBaseCommandRepository } from '../../global/infra/typeorm/repository/typeorm-base-command.repository';
 
 @Injectable()
 export class TypeormAuthCodeCommandRepository
-  extends TypeormBaseRepository<AuthCode>
+  extends TypeormBaseCommandRepository<AuthCode>
   implements AuthCodeCommandRepository
 {
   getName(): EntityTarget<AuthCode> {

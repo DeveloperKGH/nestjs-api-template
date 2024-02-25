@@ -1,8 +1,6 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UnauthorizedException } from '../../global/exception/unauthorized.exception';
-import { MemberContextDto } from '../../global/context/member-context.dto';
-import { GlobalContextUtil } from '../../global/util/global-context.util';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -36,8 +34,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (err) {
       throw err;
     }
-
-    GlobalContextUtil.setMember(MemberContextDto.of(user.memberId, user.email));
 
     return user;
   }

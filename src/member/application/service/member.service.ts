@@ -7,7 +7,7 @@ import { Member } from '../../domain/entity/member.entity';
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import { PasswordEncrypter } from '../../../auth/domain/password-encrypter.service';
 import { BadRequestException } from '../../../global/exception/bad-request.exception';
-import { Transactional } from '../../../global/common/decorator/transactional.decorator';
+import { Transactional } from '../../../global/decorator/transactional.decorator';
 import { WithdrawnMember } from '../../domain/entity/withdrawn-member.entity';
 import { WithdrawnMemberCommandRepository } from '../../domain/repository/withdrawn-member-command.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';

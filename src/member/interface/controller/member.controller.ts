@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Inject, Patch, Query, UseGuards, Version } from '@nestjs/common';
-import { BaseResponse } from '../../../global/common/interface/dto/response/base.response';
+import { BaseResponse } from '../../../global/interface/dto/response/base.response';
 import { MemberService } from '../../application/service/member.service';
 import { CheckEmailDuplicationRequest } from '../dto/request/check-email-duplication.request';
 import { CheckEmailDuplicationResponse } from '../dto/response/check-email-duplication.response';
 import { JwtAuthGuard } from '../../../auth/guard/jwt-auth.guard';
 import { MemberQueryRepository } from '../../domain/repository/member-query.repository';
 import { MemberResponse } from '../dto/response/member.response';
-import { MemberCondition } from '../../../global/common/domain/repository/dto/member.condition';
+import { MemberCondition } from '../../../global/domain/repository/dto/member.condition';
 import { GlobalContextUtil } from '../../../global/util/global-context.util';
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import { ResetMyPasswordRequest } from '../dto/request/reset-my-password.request';
@@ -32,7 +32,7 @@ export class MemberController {
       throw new NotFoundException(NotFoundException.ErrorCodes.NOT_FOUND_MEMBER);
     }
 
-    return BaseResponse.successBaseResponse(result);
+    return BaseResponse.successResponse(result);
   }
 
   @Version('1')
@@ -40,7 +40,7 @@ export class MemberController {
   async checkEmailDuplication(
     @Query() request: CheckEmailDuplicationRequest,
   ): Promise<BaseResponse<CheckEmailDuplicationResponse>> {
-    return BaseResponse.successBaseResponse(
+    return BaseResponse.successResponse(
       CheckEmailDuplicationResponse.from(await this.memberService.checkEmailDuplication(request.toServiceDto())),
     );
   }
@@ -50,7 +50,7 @@ export class MemberController {
   @Patch('/me/password')
   async resetMyPassword(@Body() request: ResetMyPasswordRequest): Promise<BaseResponse<Void>> {
     await this.memberService.resetMyPassword(request.toServiceDto());
-    return BaseResponse.voidBaseResponse();
+    return BaseResponse.voidResponse();
   }
 
   @Version('1')
@@ -58,6 +58,6 @@ export class MemberController {
   @Delete('/me')
   async withdraw(): Promise<BaseResponse<Void>> {
     await this.memberService.withdraw();
-    return BaseResponse.voidBaseResponse();
+    return BaseResponse.voidResponse();
   }
 }

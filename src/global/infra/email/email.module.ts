@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SampleMailService } from './sample-mail.service';
-import { EmailService } from '../../common/infra/email/email.service';
+import { EmailService } from '../../domain/service/email.service';
 
 @Module({
   providers: [

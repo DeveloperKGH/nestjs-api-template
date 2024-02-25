@@ -8,7 +8,7 @@ import { TokenServiceDto } from '../dto/token.service.dto';
 import { JwtTokenService } from './jwt-token.service';
 import { UnauthorizedException } from '../../../global/exception/unauthorized.exception';
 import { PasswordEncrypter } from '../../domain/password-encrypter.service';
-import { Transactional } from '../../../global/common/decorator/transactional.decorator';
+import { Transactional } from '../../../global/decorator/transactional.decorator';
 
 @Injectable()
 export class SignService {

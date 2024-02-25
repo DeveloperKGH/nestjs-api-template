@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { ValidationMessage } from '../../../../global/common/constant/validation.message';
-import { IsPassword } from '../../../../global/common/decorator/validator.decorator';
+import { ValidationMessage } from '../../../../global/constant/validation.message';
+import { IsPassword } from '../../../../global/decorator/validator.decorator';
 import { ResetPasswordServiceDto } from '../../../application/dto/reset-password.service.dto';
 
 export class ResetPasswordRequest {

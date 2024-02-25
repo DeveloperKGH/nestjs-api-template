@@ -3,12 +3,12 @@ import {
   NAMESPACE_NESTJS_API_TEMPLATE,
   NAMESPACE_ENTITY_MANAGER,
   NAMESPACE_MEMBER,
-  NAMESPACE_HEADER,
-} from '../common/constant/namespace.code';
+  NAMESPACE_REQUEST_CONTEXT,
+} from '../constant/namespace.code';
 import { InternalServerException } from '../exception/internal-server.exception';
 import { EntityManager } from 'typeorm';
 import { MemberContextDto } from '../context/member-context.dto';
-import { HeaderContextDto } from '../context/header-context.dto';
+import { RequestContextDto } from '../context/request-context.dto';
 
 export class GlobalContextUtil {
   public static getMainNamespace(): any {
@@ -37,11 +37,11 @@ export class GlobalContextUtil {
     return this.getMainNamespace().get(NAMESPACE_ENTITY_MANAGER);
   }
 
-  public static setHeader(context: HeaderContextDto): void {
-    this.getMainNamespace().set(NAMESPACE_HEADER, context);
+  public static setRequestContext(context: RequestContextDto): void {
+    this.getMainNamespace().set(NAMESPACE_REQUEST_CONTEXT, context);
   }
 
-  public static getHeader(): HeaderContextDto {
-    return this.getMainNamespace().get(NAMESPACE_HEADER);
+  public static getRequestContext(): RequestContextDto {
+    return this.getMainNamespace().get(NAMESPACE_REQUEST_CONTEXT);
   }
 }

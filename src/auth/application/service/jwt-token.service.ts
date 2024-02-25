@@ -8,7 +8,7 @@ import { RefreshToken } from '../../domain/entity/refresh-token.entity';
 import { RefreshTokenCommandRepository } from '../../domain/repository/refresh-token-command.repository';
 import { RefreshTokenEncrypter } from '../../domain/refresh-token-encrypter.service';
 import { UnauthorizedException } from '../../../global/exception/unauthorized.exception';
-import { Propagation, Transactional } from '../../../global/common/decorator/transactional.decorator';
+import { Propagation, Transactional } from '../../../global/decorator/transactional.decorator';
 
 @Injectable()
 export class JwtTokenService {

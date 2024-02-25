@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SendCodeResetPasswordServiceDto } from '../dto/send-code-reset-password.service.dto';
 import { NotFoundException } from '../../../global/exception/not-found.exception';
-import { EmailService } from '../../../global/common/infra/email/email.service';
+import { EmailService } from '../../../global/domain/service/email.service';
 import { AuthCodeCommandRepository } from '../../domain/repository/auth-code-command.repository';
 import { AuthCode } from '../../domain/entity/auth-code.entity';
 import { MemberCommandRepository } from '../../../member/domain/repository/member-command.repository';
@@ -10,7 +10,7 @@ import { BadRequestException } from '../../../global/exception/bad-request.excep
 import { AuthCodeType } from '../../domain/enum/auth-code-type.enum';
 import { TooManyRequestsException } from '../../../global/exception/too-many-requests.exception';
 import { Member } from '../../../member/domain/entity/member.entity';
-import { Propagation, Transactional } from '../../../global/common/decorator/transactional.decorator';
+import { Propagation, Transactional } from '../../../global/decorator/transactional.decorator';
 import { ResetPasswordServiceDto } from '../dto/reset-password.service.dto';
 import { PasswordEncrypter } from '../../domain/password-encrypter.service';
 import { RefreshTokenServiceDto } from '../dto/refresh-token.service.dto';

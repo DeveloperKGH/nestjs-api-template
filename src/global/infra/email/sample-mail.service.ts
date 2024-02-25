@@ -1,4 +1,4 @@
-import { EmailService } from '../../common/infra/email/email.service';
+import { EmailService } from '../../domain/service/email.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

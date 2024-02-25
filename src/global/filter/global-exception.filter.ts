@@ -1,88 +1,135 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Inject } from '@nestjs/common';
-import { BaseResponse } from '../common/interface/dto/response/base.response';
+import { BaseResponse } from '../interface/dto/response/base.response';
 import { instanceToPlain } from 'class-transformer';
-import { GlobalContextUtil } from '../util/global-context.util';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { TimeUtil } from '../util/time.util';
-import { LocalDateTime } from '@js-joda/core';
-import { HeaderContextDto } from '../context/header-context.dto';
+import { RequestContextDto } from '../context/request-context.dto';
 import { MemberContextDto } from '../context/member-context.dto';
+import { LoggerService, LoggerServiceToken } from '../logger/logger.service';
+import { ErrorLoggerField, LoggerServiceDto } from '../logger/logger.service.dto';
+import { isEmpty } from '../util/common.util';
+import { getIp } from '../function/common.function';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
+  constructor(@Inject(LoggerServiceToken) private readonly loggerService: LoggerService) {}
 
-  catch(exception: any, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const request = ctx.getRequest();
-    const response = ctx.getResponse();
-
-    const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    const message = exception['response']?.message ?? exception.message;
-    const stacktrace = exception.stack ?? '';
-    const data = exception['response']?.data ?? {};
-
-    const baseResponse = BaseResponse.errorBaseResponse(exception['response']?.code ?? status, message, data);
-
-    response.status(status).json(instanceToPlain(baseResponse));
-
-    let headerContext = null;
-    let member = null;
-
+  catch(exception: unknown, host: ArgumentsHost) {
     try {
-      headerContext = GlobalContextUtil.getHeader();
-      member = GlobalContextUtil.getMember();
-    } catch (e) {}
+      const ctx = host.switchToHttp();
+      const request = ctx.getRequest();
+      const response = ctx.getResponse();
 
-    if (!headerContext) {
-      headerContext = HeaderContextDto.createDefault(
-        request.get('user-agent'),
-        request.ip,
+      let status: number;
+      let message: string;
+      let data: unknown;
+      let code: number;
+      let stacktrace;
+      const ip = getIp(request);
+
+      if (exception instanceof HttpException) {
+        const responseBody = exception.getResponse();
+        status = exception.getStatus();
+        message =
+          typeof responseBody === 'object' && 'message' in responseBody
+            ? (responseBody.message as string)
+            : exception.message;
+        data = typeof responseBody === 'object' && 'data' in responseBody ? responseBody.data : {};
+        code = typeof responseBody === 'object' && 'code' in responseBody ? (responseBody.code as number) : status;
+        stacktrace = exception.stack;
+
+        this.logError(ip, status, code, message, stacktrace, data, request);
+
+        const baseResponse = BaseResponse.errorResponse(code, message, data);
+        response.status(status).json(instanceToPlain(baseResponse));
+
+        return;
+      }
+
+      if (exception instanceof Error) {
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        code = status;
+        message = exception.message || '';
+        data = {};
+        stacktrace = exception.stack || '';
+
+        this.logError(ip, status, code, message, stacktrace, data, request);
+
+        const baseResponse = BaseResponse.errorResponse(code, message, data);
+        response.status(status).json(instanceToPlain(baseResponse));
+
+        return;
+      }
+
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+      code = status;
+      message = typeof exception === 'string' ? exception : '';
+      data = {};
+      stacktrace = '';
+
+      this.logError(ip, status, code, message, stacktrace, data, request);
+
+      const baseResponse = BaseResponse.errorResponse(code, message, data);
+      response.status(status).json(instanceToPlain(baseResponse));
+    } catch (error) {
+      const isError = error instanceof Error;
+      const stacktrace = isError ? error.stack : '';
+      const status = HttpStatus.INTERNAL_SERVER_ERROR;
+      const message = 'An unexpected error occurred in ApiGatewayGlobalExceptionFilter';
+
+      this.loggerService.error(
+        LoggerServiceDto.createErrorLog(
+          status,
+          undefined,
+          undefined,
+          ErrorLoggerField.of(status, message, {}, stacktrace),
+        ),
+      );
+
+      host
+        .switchToHttp()
+        .getResponse()
+        .status(status)
+        .json(instanceToPlain(BaseResponse.errorResponse(status, message, {})));
+    }
+  }
+
+  private logError(
+    ip: string,
+    status: number,
+    code: number,
+    message: string,
+    stacktrace: string | undefined,
+    data: unknown,
+    request: {
+      method: string;
+      originalUrl: string;
+      'user-agent': string;
+      body: string;
+      query: string;
+      requestContext: RequestContextDto | undefined;
+      memberContext: MemberContextDto | undefined;
+    },
+  ) {
+    let { requestContext } = request;
+    const { memberContext } = request;
+
+    if (isEmpty(requestContext)) {
+      requestContext = RequestContextDto.createDefault(
+        ip,
         request.method,
         request.originalUrl,
+        request['user-agent'],
         request.body,
         request.query,
       );
     }
 
-    this.logError(status, message, stacktrace, headerContext, member);
-  }
+    const loggerServiceDto = LoggerServiceDto.createErrorLog(
+      status,
+      requestContext,
+      memberContext,
+      ErrorLoggerField.of(code, message, data, stacktrace),
+    );
 
-  private logError(
-    status: number,
-    message: string,
-    stacktrace: string,
-    headerContext: HeaderContextDto,
-    memberContext: MemberContextDto | null,
-  ) {
-    try {
-      const body = {
-        transactionId: headerContext.transactionId,
-        status: status,
-        url: `${headerContext.httpMethod} ${headerContext.url}`,
-        requestBody: headerContext.requestBody,
-        queryParams: headerContext.queryParams,
-        ip: headerContext.ip,
-        userAgent: headerContext.userAgent,
-        message: message,
-        stacktrace: stacktrace,
-        member: memberContext,
-        executionTime: `${TimeUtil.getMillisOfDuration(headerContext.startTime, LocalDateTime.now())} ms`,
-      };
-
-      if (status < 500) {
-        process.env.NODE_ENV === 'prod'
-          ? this.logger.warn(`${JSON.stringify(body)}`)
-          : this.logger.warn(`${JSON.stringify(body, null, 2)}`);
-        return;
-      }
-
-      process.env.NODE_ENV === 'prod'
-        ? this.logger.error(`${JSON.stringify(body)}`)
-        : this.logger.error(`${JSON.stringify(body, null, 2)}`);
-    } catch (e) {
-      this.logger.error(`${e}`);
-    }
+    this.loggerService.error(loggerServiceDto);
   }
 }

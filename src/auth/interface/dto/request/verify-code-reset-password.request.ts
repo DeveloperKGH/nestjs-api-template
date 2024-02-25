@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
 import { VerifyCodeResetPasswordServiceDto } from '../../../application/dto/verify-code-reset-password.service.dto';
-import { ValidationMessage } from '../../../../global/common/constant/validation.message';
+import { ValidationMessage } from '../../../../global/constant/validation.message';
 
 export class VerifyCodeResetPasswordRequest {
   @IsNotEmpty({ message: ValidationMessage.email.isEmpty })

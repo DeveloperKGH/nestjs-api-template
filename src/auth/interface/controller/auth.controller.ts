@@ -1,5 +1,5 @@
 import { Body, Controller, Patch, Post, Version } from '@nestjs/common';
-import { BaseResponse } from '../../../global/common/interface/dto/response/base.response';
+import { BaseResponse } from '../../../global/interface/dto/response/base.response';
 import { SendCodeResetPasswordRequest } from '../dto/request/send-code-reset-password.request';
 import { AuthService } from '../../application/service/auth.service';
 import { VerifyCodeResetPasswordRequest } from '../dto/request/verify-code-reset-password.request';
@@ -16,14 +16,14 @@ export class AuthController {
   @Post('/refresh')
   async refreshAccessToken(@Body() request: RefreshTokenRequest): Promise<BaseResponse<SignInResponse>> {
     const result = await this.authService.refreshAccessToken(request.toServiceDto());
-    return BaseResponse.successBaseResponse(SignInResponse.from(result));
+    return BaseResponse.successResponse(SignInResponse.from(result));
   }
 
   @Version('1')
   @Post('/codes/reset-password')
   async sendCodeToResetPassword(@Body() request: SendCodeResetPasswordRequest): Promise<BaseResponse<Void>> {
     await this.authService.sendCodeToResetPassword(request.toServiceDto());
-    return BaseResponse.voidBaseResponse();
+    return BaseResponse.voidResponse();
   }
 
   @Version('1')
@@ -31,7 +31,7 @@ export class AuthController {
   async verifyAuthCodeByResetPassword(
     @Body() request: VerifyCodeResetPasswordRequest,
   ): Promise<BaseResponse<VerifyCodeResetPasswordResponse>> {
-    return BaseResponse.successBaseResponse(
+    return BaseResponse.successResponse(
       VerifyCodeResetPasswordResponse.fromEntity(
         await this.authService.verifyAuthCodeByResetPassword(request.toServiceDto()),
       ),
@@ -42,6 +42,6 @@ export class AuthController {
   @Patch('/reset-password')
   async resetPassword(@Body() request: ResetPasswordRequest): Promise<BaseResponse<Void>> {
     await this.authService.resetPassword(request.toServiceDto());
-    return BaseResponse.voidBaseResponse();
+    return BaseResponse.voidResponse();
   }
 }

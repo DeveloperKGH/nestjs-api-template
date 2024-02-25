@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { TypeormBaseRepository } from '../../global/common/infra/repository/typeorm-base.repository';
+import { TypeormBaseCommandRepository } from '../../global/infra/typeorm/repository/typeorm-base-command.repository';
 import { EntityTarget } from 'typeorm';
 import { WithdrawnMember } from '../domain/entity/withdrawn-member.entity';
 import { WithdrawnMemberCommandRepository } from '../domain/repository/withdrawn-member-command.repository';
 
 @Injectable()
 export class TypeormWithdrawnMemberCommandRepository
-  extends TypeormBaseRepository<WithdrawnMember>
+  extends TypeormBaseCommandRepository<WithdrawnMember>
   implements WithdrawnMemberCommandRepository
 {
   getName(): EntityTarget<WithdrawnMember> {

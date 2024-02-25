@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { ValidationMessage } from '../../../../global/common/constant/validation.message';
+import { ValidationMessage } from '../../../../global/constant/validation.message';
 import { SendCodeResetPasswordServiceDto } from '../../../application/dto/send-code-reset-password.service.dto';
 
 export class SendCodeResetPasswordRequest {

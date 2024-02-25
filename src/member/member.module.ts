@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MemberController } from './interface/controller/member.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from './domain/entity/member.entity';
 import { TypeormMemberQueryRepository } from './infra/typeorm-member-query.repository';
 import { MemberQueryRepository } from './domain/repository/member-query.repository';
 import { MemberService } from './application/service/member.service';
@@ -11,7 +9,7 @@ import { WithdrawnMemberCommandRepository } from './domain/repository/withdrawn-
 import { TypeormWithdrawnMemberCommandRepository } from './infra/typeorm-withdrawn-member-command.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Member])],
+  imports: [],
   controllers: [MemberController],
   providers: [
     MemberService,

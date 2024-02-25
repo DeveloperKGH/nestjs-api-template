@@ -9,8 +9,6 @@ import { AuthController } from './interface/controller/auth.controller';
 import { AuthService } from './application/service/auth.service';
 import { EmailModule } from '../global/infra/email/email.module';
 import { TypeormAuthCodeCommandRepository } from './infra/typeorm-auth-code-command.repository';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthCode } from './domain/entity/auth-code.entity';
 import { AuthCodeCommandRepository } from './domain/repository/auth-code-command.repository';
 import { RefreshTokenCommandRepository } from './domain/repository/refresh-token-command.repository';
 import { TypeormRefreshTokenCommandRepository } from './infra/typeorm-refresh-token-command.repository';
@@ -18,7 +16,7 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { JwtStrategy } from './guard/strategy/jwt.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthCode]), MemberModule, EmailModule, getJwtConfig()],
+  imports: [MemberModule, EmailModule, getJwtConfig()],
   controllers: [SignController, AuthController],
   providers: [
     SignService,

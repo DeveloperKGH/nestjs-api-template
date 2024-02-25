@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 import { NumberUtil } from '../../../../global/util/number.util';
-import { EnumResponse } from '../../../../global/common/interface/dto/response/enum.response';
+import { EnumResponse } from '../../../../global/interface/dto/response/enum.response';
 import { MemberRole } from '../../../domain/enum/member-role.enum';
 
 export class MemberResponse {

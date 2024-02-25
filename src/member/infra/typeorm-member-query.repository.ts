@@ -1,28 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { MemberQueryRepository } from '../domain/repository/member-query.repository';
-import { MemberCondition } from '../../global/common/domain/repository/dto/member.condition';
-import { getMetadataArgsStorage, Repository, SelectQueryBuilder } from 'typeorm';
+import { MemberCondition } from '../../global/domain/repository/dto/member.condition';
+import { EntityTarget, getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
 import { Member } from '../domain/entity/member.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { MemberResponse } from '../interface/dto/response/member.response';
 import { plainToInstance } from 'class-transformer';
-import { PagingResponse } from '../../global/common/interface/dto/response/paging.response';
-import { SortEnum } from '../../global/common/domain/enum/sort.enum';
+import { PagingResponse } from '../../global/interface/dto/response/paging.response';
+import { SortEnum } from '../../global/domain/enum/sort.enum';
 import { BadRequestException } from '../../global/exception/bad-request.exception';
+import { TypeormBaseQueryRepository } from '../../global/infra/typeorm/repository/typeorm-base-query.repository';
 
 @Injectable()
-export class TypeormMemberQueryRepository implements MemberQueryRepository {
+export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Member> implements MemberQueryRepository {
   public static readonly ENTITY_FIELD_NAMES = getMetadataArgsStorage()
     .columns.filter(column => column.target === Member)
     .map(column => column.propertyName);
 
-  constructor(
-    @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
-  ) {}
+  override getName(): EntityTarget<Member> {
+    return Member.name;
+  }
 
   async find(condition: MemberCondition): Promise<MemberResponse | null> {
-    const queryBuilder = this.memberRepository
+    const queryBuilder = this.getRepository()
       .createQueryBuilder('member')
       .select(['member.id as _id', 'member.email as _email', 'member.password as _password', 'member.role as _role']);
 
@@ -35,7 +34,7 @@ export class TypeormMemberQueryRepository implements MemberQueryRepository {
   }
 
   async findAll(condition: MemberCondition): Promise<MemberResponse[] | PagingResponse<MemberResponse> | []> {
-    const queryBuilder = this.memberRepository
+    const queryBuilder = this.getRepository()
       .createQueryBuilder('member')
       .select(['member.id as _id', 'member.email as _email', 'member.password as _password', 'member.role as _role']);
 

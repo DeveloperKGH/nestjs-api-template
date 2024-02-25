@@ -1,10 +1,10 @@
 import { BeforeInsert, Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryColumn, Unique } from 'typeorm';
-import { LocalDateTimeTransformer } from '../../../global/common/infra/transformer/local-date-time.transformer';
+import { LocalDateTimeTransformer } from '../../../global/infra/typeorm/transformer/local-date-time.transformer';
 import { LocalDateTime } from '@js-joda/core';
 import { Member } from '../../../member/domain/entity/member.entity';
 import { RandomUtil } from '../../../global/util/random.util';
-import { BigintTransformer } from '../../../global/common/infra/transformer/bigint.transformer';
-import { BaseEntity } from '../../../global/common/domain/entity/base.entity';
+import { BigintTransformer } from '../../../global/infra/typeorm/transformer/bigint.transformer';
+import { BaseEntity } from '../../../global/domain/entity/base.entity';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayloadServiceDto } from '../../application/dto/token-payload.service.dto';
 import { InternalServerException } from '../../../global/exception/internal-server.exception';

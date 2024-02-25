@@ -1,5 +1,5 @@
 import { Enum, EnumType } from 'ts-jenum';
-import { BaseEnum } from '../../../global/common/domain/enum/base.enum';
+import { BaseEnum } from '../../../global/domain/enum/base.enum';
 import { InternalServerException } from '../../../global/exception/internal-server.exception';
 import { ForbiddenException } from '../../../global/exception/forbidden.exception';
 

@@ -1,11 +1,14 @@
 import { MemberCommandRepository } from '../domain/repository/member-command.repository';
 import { Member } from '../domain/entity/member.entity';
 import { Injectable } from '@nestjs/common';
-import { TypeormBaseRepository } from '../../global/common/infra/repository/typeorm-base.repository';
+import { TypeormBaseCommandRepository } from '../../global/infra/typeorm/repository/typeorm-base-command.repository';
 import { EntityTarget } from 'typeorm';
 
 @Injectable()
-export class TypeormMemberCommandRepository extends TypeormBaseRepository<Member> implements MemberCommandRepository {
+export class TypeormMemberCommandRepository
+  extends TypeormBaseCommandRepository<Member>
+  implements MemberCommandRepository
+{
   getName(): EntityTarget<Member> {
     return Member.name;
   }
