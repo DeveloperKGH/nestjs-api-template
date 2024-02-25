@@ -11,7 +11,7 @@ import { LocalDateTime } from '@js-joda/core';
 export class WinstonLoggerService implements LoggerService {
   constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
 
-  info(serviceDto: LoggerServiceDto): void {
+  async info(serviceDto: LoggerServiceDto): Promise<void> {
     try {
       const status = serviceDto.status as number;
       const requestContext = serviceDto.requestContext;
@@ -50,7 +50,7 @@ export class WinstonLoggerService implements LoggerService {
     }
   }
 
-  error(serviceDto: LoggerServiceDto): void {
+  async error(serviceDto: LoggerServiceDto): Promise<void> {
     try {
       const status = serviceDto.status as number;
       const requestContext = serviceDto.requestContext;

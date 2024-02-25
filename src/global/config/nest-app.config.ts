@@ -3,6 +3,7 @@ import { ValidationError } from 'class-validator';
 import { BadRequestException } from '../exception/bad-request.exception';
 import { Reflector } from '@nestjs/core';
 import * as process from 'process';
+import { handleFatalErrors } from '../function/common.function';
 
 export function setNestApp<T extends INestApplication>(app: T) {
   // ValidationPipe 를 전역적으로 사용하도록 설정
@@ -35,4 +36,6 @@ export function setNestApp<T extends INestApplication>(app: T) {
   if (process.env.NODE_ENV !== 'local') {
     app.enableShutdownHooks();
   }
+
+  handleFatalErrors(app);
 }
