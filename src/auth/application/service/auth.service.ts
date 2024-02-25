@@ -3,16 +3,19 @@ import { SendCodeResetPasswordServiceDto } from '../dto/send-code-reset-password
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import { EmailService } from '../../../global/domain/service/email.service';
 import { AuthCodeCommandRepository } from '../../domain/repository/auth-code-command.repository';
-import { AuthCode } from '../../domain/entity/auth-code.entity';
+import { AuthCode } from '../../infra/typeorm/entity/auth-code.entity';
 import { MemberCommandRepository } from '../../../member/domain/repository/member-command.repository';
 import { VerifyCodeResetPasswordServiceDto } from '../dto/verify-code-reset-password.service.dto';
 import { BadRequestException } from '../../../global/exception/bad-request.exception';
 import { AuthCodeType } from '../../domain/enum/auth-code-type.enum';
 import { TooManyRequestsException } from '../../../global/exception/too-many-requests.exception';
-import { Member } from '../../../member/domain/entity/member.entity';
+import { Member } from '../../../member/infra/typeorm/entity/member.entity';
 import { Propagation, Transactional } from '../../../global/decorator/transactional.decorator';
 import { ResetPasswordServiceDto } from '../dto/reset-password.service.dto';
-import { PasswordEncrypter } from '../../domain/password-encrypter.service';
+import {
+  PasswordEncrypterService,
+  PasswordEncrypterServiceToken,
+} from '../../domain/service/password-encrypter.service';
 import { RefreshTokenServiceDto } from '../dto/refresh-token.service.dto';
 import { TokenServiceDto } from '../dto/token.service.dto';
 import { JwtTokenService } from './jwt-token.service';
@@ -31,8 +34,8 @@ export class AuthService {
     @Inject(EmailService)
     private readonly emailService: EmailService,
 
-    @Inject(PasswordEncrypter)
-    private readonly passwordEncrypter: PasswordEncrypter,
+    @Inject(PasswordEncrypterServiceToken)
+    private readonly passwordEncrypter: PasswordEncrypterService,
   ) {}
 
   @Transactional()

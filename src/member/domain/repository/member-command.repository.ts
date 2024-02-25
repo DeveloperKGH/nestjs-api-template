@@ -1,4 +1,4 @@
-import { Member } from '../entity/member.entity';
+import { Member } from '../../infra/typeorm/entity/member.entity';
 
 export interface MemberCommandRepository {
   save(member: Member): Promise<Member>;

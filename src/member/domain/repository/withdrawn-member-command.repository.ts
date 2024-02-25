@@ -1,4 +1,4 @@
-import { WithdrawnMember } from '../entity/withdrawn-member.entity';
+import { WithdrawnMember } from '../../infra/typeorm/entity/withdrawn-member.entity';
 
 export interface WithdrawnMemberCommandRepository {
   save(withdrawnMember: WithdrawnMember): Promise<WithdrawnMember>;

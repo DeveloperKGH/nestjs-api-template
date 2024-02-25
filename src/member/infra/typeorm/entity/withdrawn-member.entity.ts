@@ -1,10 +1,10 @@
-import { BaseTimeEntity } from '../../../global/domain/entity/base-time.entity';
-import { MemberRole } from '../enum/member-role.enum';
+import { BaseTimeEntity } from '../../../../global/infra/typeorm/entity/base-time.entity';
+import { MemberRole } from '../../../domain/enum/member-role.enum';
 import { Column, Entity, Generated, PrimaryColumn } from 'typeorm';
-import { MemberRoleTransformer } from '../../infra/transformer/member-role.transformer';
-import { BigintTransformer } from '../../../global/infra/typeorm/transformer/bigint.transformer';
+import { MemberRoleTransformer } from '../transformer/member-role.transformer';
+import { BigintTransformer } from '../../../../global/infra/typeorm/transformer/bigint.transformer';
 import { Member } from './member.entity';
-import { MemberCommandRepository } from '../repository/member-command.repository';
+import { MemberCommandRepository } from '../../../domain/repository/member-command.repository';
 
 @Entity()
 export class WithdrawnMember extends BaseTimeEntity {

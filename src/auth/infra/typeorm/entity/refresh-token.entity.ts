@@ -1,15 +1,15 @@
 import { BeforeInsert, Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryColumn, Unique } from 'typeorm';
-import { LocalDateTimeTransformer } from '../../../global/infra/typeorm/transformer/local-date-time.transformer';
+import { LocalDateTimeTransformer } from '../../../../global/infra/typeorm/transformer/local-date-time.transformer';
 import { LocalDateTime } from '@js-joda/core';
-import { Member } from '../../../member/domain/entity/member.entity';
-import { RandomUtil } from '../../../global/util/random.util';
-import { BigintTransformer } from '../../../global/infra/typeorm/transformer/bigint.transformer';
-import { BaseEntity } from '../../../global/domain/entity/base.entity';
+import { Member } from '../../../../member/infra/typeorm/entity/member.entity';
+import { RandomUtil } from '../../../../global/util/random.util';
+import { BigintTransformer } from '../../../../global/infra/typeorm/transformer/bigint.transformer';
+import { BaseEntity } from '../../../../global/infra/typeorm/entity/base.entity';
 import { JwtService } from '@nestjs/jwt';
-import { TokenPayloadServiceDto } from '../../application/dto/token-payload.service.dto';
-import { InternalServerException } from '../../../global/exception/internal-server.exception';
-import { NumberUtil } from '../../../global/util/number.util';
-import { RefreshTokenEncrypter } from '../refresh-token-encrypter.service';
+import { TokenPayloadServiceDto } from '../../../application/dto/token-payload.service.dto';
+import { InternalServerException } from '../../../../global/exception/internal-server.exception';
+import { NumberUtil } from '../../../../global/util/number.util';
+import { RefreshTokenEncrypterService } from '../../../domain/service/refresh-token-encrypter.service';
 
 @Unique('UK_member_id', ['member'])
 @Entity()
@@ -69,7 +69,7 @@ export class RefreshToken extends BaseEntity {
     return new RefreshToken(member, token, LocalDateTime.now().plusDays(duration));
   }
 
-  public async hashRefreshToken(encrypter: RefreshTokenEncrypter): Promise<void> {
+  public async hashRefreshToken(encrypter: RefreshTokenEncrypterService): Promise<void> {
     const hashedToken = await encrypter.hash(this.token);
 
     if (!hashedToken) {

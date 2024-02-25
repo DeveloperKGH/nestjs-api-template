@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { EntityTarget } from 'typeorm';
-import { TypeormBaseCommandRepository } from '../../global/infra/typeorm/repository/typeorm-base-command.repository';
-import { RefreshToken } from '../domain/entity/refresh-token.entity';
-import { RefreshTokenCommandRepository } from '../domain/repository/refresh-token-command.repository';
+import { TypeormBaseCommandRepository } from '../../../../global/infra/typeorm/repository/typeorm-base-command.repository';
+import { RefreshToken } from '../entity/refresh-token.entity';
+import { RefreshTokenCommandRepository } from '../../../domain/repository/refresh-token-command.repository';
 
 @Injectable()
 export class TypeormRefreshTokenCommandRepository

@@ -1,6 +1,6 @@
 import { LocalDateTime } from '@js-joda/core';
 import { BeforeInsert, BeforeUpdate, Column } from 'typeorm';
-import { LocalDateTimeTransformer } from '../../infra/typeorm/transformer/local-date-time.transformer';
+import { LocalDateTimeTransformer } from '../transformer/local-date-time.transformer';
 import { BaseEntity } from './base.entity';
 
 export abstract class BaseTimeEntity extends BaseEntity {

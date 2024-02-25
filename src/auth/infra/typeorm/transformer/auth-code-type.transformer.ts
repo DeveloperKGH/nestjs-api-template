@@ -1,5 +1,5 @@
 import { ValueTransformer } from 'typeorm';
-import { AuthCodeType } from '../../domain/enum/auth-code-type.enum';
+import { AuthCodeType } from '../../../domain/enum/auth-code-type.enum';
 
 export class AuthCodeTypeTransformer implements ValueTransformer {
   to(entityValue: AuthCodeType): string | null {

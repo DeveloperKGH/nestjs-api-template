@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { MemberQueryRepository } from '../domain/repository/member-query.repository';
-import { MemberCondition } from '../../global/domain/repository/dto/member.condition';
+import { MemberQueryRepository } from '../../../domain/repository/member-query.repository';
+import { MemberCondition } from '../../../../global/domain/repository/dto/member.condition';
 import { EntityTarget, getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
-import { Member } from '../domain/entity/member.entity';
-import { MemberResponse } from '../interface/dto/response/member.response';
+import { Member } from '../entity/member.entity';
+import { MemberResponse } from '../../../interface/dto/response/member.response';
 import { plainToInstance } from 'class-transformer';
-import { PagingResponse } from '../../global/interface/dto/response/paging.response';
-import { SortEnum } from '../../global/domain/enum/sort.enum';
-import { BadRequestException } from '../../global/exception/bad-request.exception';
-import { TypeormBaseQueryRepository } from '../../global/infra/typeorm/repository/typeorm-base-query.repository';
+import { PagingResponse } from '../../../../global/interface/dto/response/paging.response';
+import { SortEnum } from '../../../../global/domain/enum/sort.enum';
+import { BadRequestException } from '../../../../global/exception/bad-request.exception';
+import { TypeormBaseQueryRepository } from '../../../../global/infra/typeorm/repository/typeorm-base-query.repository';
 
 @Injectable()
 export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Member> implements MemberQueryRepository {

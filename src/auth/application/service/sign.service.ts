@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SignUpServiceDto } from '../dto/sign-up.service.dto';
-import { Member } from '../../../member/domain/entity/member.entity';
+import { Member } from '../../../member/infra/typeorm/entity/member.entity';
 import { MemberCommandRepository } from '../../../member/domain/repository/member-command.repository';
 import { ConflictException } from '../../../global/exception/conflict.exception';
 import { SignInServiceDto } from '../dto/sign-in.service.dto';
 import { TokenServiceDto } from '../dto/token.service.dto';
 import { JwtTokenService } from './jwt-token.service';
 import { UnauthorizedException } from '../../../global/exception/unauthorized.exception';
-import { PasswordEncrypter } from '../../domain/password-encrypter.service';
+import { PasswordEncrypterServiceToken } from '../../domain/service/password-encrypter.service';
 import { Transactional } from '../../../global/decorator/transactional.decorator';
+import { RefreshTokenEncrypterService } from '../../domain/service/refresh-token-encrypter.service';
 
 @Injectable()
 export class SignService {
@@ -18,8 +19,8 @@ export class SignService {
     @Inject(MemberCommandRepository)
     private readonly memberCommandRepository: MemberCommandRepository,
 
-    @Inject(PasswordEncrypter)
-    private readonly passwordEncrypter: PasswordEncrypter,
+    @Inject(PasswordEncrypterServiceToken)
+    private readonly passwordEncrypter: RefreshTokenEncrypterService,
   ) {}
 
   @Transactional()

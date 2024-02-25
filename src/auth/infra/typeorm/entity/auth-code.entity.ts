@@ -1,16 +1,16 @@
 import { BeforeInsert, Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { LocalDateTimeTransformer } from '../../../global/infra/typeorm/transformer/local-date-time.transformer';
+import { LocalDateTimeTransformer } from '../../../../global/infra/typeorm/transformer/local-date-time.transformer';
 import { LocalDateTime } from '@js-joda/core';
-import { Member } from '../../../member/domain/entity/member.entity';
-import { AuthCodeTypeTransformer } from '../../infra/transformer/auth-code-type.transformer';
-import { AuthCodeType } from '../enum/auth-code-type.enum';
-import { RandomUtil } from '../../../global/util/random.util';
-import { StringUtil } from '../../../global/util/string.util';
-import { InternalServerException } from '../../../global/exception/internal-server.exception';
-import { BadRequestException } from '../../../global/exception/bad-request.exception';
-import { BooleanTransformer } from '../../../global/infra/typeorm/transformer/boolean.transformer';
-import { BigintTransformer } from '../../../global/infra/typeorm/transformer/bigint.transformer';
-import { BaseEntity } from '../../../global/domain/entity/base.entity';
+import { Member } from '../../../../member/infra/typeorm/entity/member.entity';
+import { AuthCodeTypeTransformer } from '../transformer/auth-code-type.transformer';
+import { AuthCodeType } from '../../../domain/enum/auth-code-type.enum';
+import { RandomUtil } from '../../../../global/util/random.util';
+import { StringUtil } from '../../../../global/util/string.util';
+import { InternalServerException } from '../../../../global/exception/internal-server.exception';
+import { BadRequestException } from '../../../../global/exception/bad-request.exception';
+import { BooleanTransformer } from '../../../../global/infra/typeorm/transformer/boolean.transformer';
+import { BigintTransformer } from '../../../../global/infra/typeorm/transformer/bigint.transformer';
+import { BaseEntity } from '../../../../global/infra/typeorm/entity/base.entity';
 
 @Entity()
 export class AuthCode extends BaseEntity {

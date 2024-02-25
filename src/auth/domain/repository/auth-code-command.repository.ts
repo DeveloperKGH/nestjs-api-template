@@ -1,4 +1,4 @@
-import { AuthCode } from '../entity/auth-code.entity';
+import { AuthCode } from '../../infra/typeorm/entity/auth-code.entity';
 import { AuthCodeType } from '../enum/auth-code-type.enum';
 
 export interface AuthCodeCommandRepository {

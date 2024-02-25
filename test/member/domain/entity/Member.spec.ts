@@ -1,7 +1,7 @@
-import { Member } from '../../../../src/member/domain/entity/member.entity';
+import { Member } from '../../../../src/member/infra/typeorm/entity/member.entity';
 import { StringUtil } from '../../../../src/global/util/string.util';
 import { MemberRole } from '../../../../src/member/domain/enum/member-role.enum';
-import { PasswordEncrypter } from '../../../../src/auth/domain/password-encrypter.service';
+import { PasswordEncrypterServiceToken } from '../../../../src/auth/domain/service/password-encrypter.service';
 
 describe('Member', () => {
   let signUpMember: Member;
@@ -9,7 +9,7 @@ describe('Member', () => {
     signUpMember = await Member.signUpMember('developerkgh@gmail.com', 'a1234567!', mockPasswordEncrypter);
   });
 
-  const mockPasswordEncrypter: PasswordEncrypter = {
+  const mockPasswordEncrypter: PasswordEncrypterServiceToken = {
     async hash(password: string): Promise<string | null> {
       return StringUtil.reverse(password);
     },

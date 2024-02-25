@@ -1,12 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Member } from '../../../member/domain/entity/member.entity';
+import { Member } from '../../../member/infra/typeorm/entity/member.entity';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayloadServiceDto } from '../dto/token-payload.service.dto';
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import { RandomUtil } from '../../../global/util/random.util';
-import { RefreshToken } from '../../domain/entity/refresh-token.entity';
+import { RefreshToken } from '../../infra/typeorm/entity/refresh-token.entity';
 import { RefreshTokenCommandRepository } from '../../domain/repository/refresh-token-command.repository';
-import { RefreshTokenEncrypter } from '../../domain/refresh-token-encrypter.service';
+import {
+  RefreshTokenEncrypterService,
+  RefreshTokenEncrypterServiceToken,
+} from '../../domain/service/refresh-token-encrypter.service';
 import { UnauthorizedException } from '../../../global/exception/unauthorized.exception';
 import { Propagation, Transactional } from '../../../global/decorator/transactional.decorator';
 
@@ -18,8 +21,8 @@ export class JwtTokenService {
     @Inject(RefreshTokenCommandRepository)
     private readonly refreshTokenCommandRepository: RefreshTokenCommandRepository,
 
-    @Inject(RefreshTokenEncrypter)
-    private readonly refreshTokenEncrypter: RefreshTokenEncrypter,
+    @Inject(RefreshTokenEncrypterServiceToken)
+    private readonly refreshTokenEncrypter: RefreshTokenEncrypterService,
   ) {}
 
   async createAccessToken(member: Member): Promise<string> {

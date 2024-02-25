@@ -1,5 +1,5 @@
 import { EntityTarget, Repository } from 'typeorm';
-import { BaseEntity } from '../../../domain/entity/base.entity';
+import { BaseEntity } from '../entity/base.entity';
 import { GlobalContextUtil } from '../../../util/global-context.util';
 
 export abstract class TypeormBaseQueryRepository<T extends BaseEntity> {

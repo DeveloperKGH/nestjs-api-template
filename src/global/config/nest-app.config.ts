@@ -37,5 +37,6 @@ export function setNestApp<T extends INestApplication>(app: T) {
     app.enableShutdownHooks();
   }
 
+  // handle 되지 않은 exception 들 모이는 곳
   handleFatalErrors(app);
 }

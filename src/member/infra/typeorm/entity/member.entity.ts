@@ -1,9 +1,9 @@
-import { BaseTimeEntity } from '../../../global/domain/entity/base-time.entity';
-import { MemberRole } from '../enum/member-role.enum';
+import { BaseTimeEntity } from '../../../../global/infra/typeorm/entity/base-time.entity';
+import { MemberRole } from '../../../domain/enum/member-role.enum';
 import { Column, Entity, Generated, PrimaryColumn } from 'typeorm';
-import { MemberRoleTransformer } from '../../infra/transformer/member-role.transformer';
-import { BigintTransformer } from '../../../global/infra/typeorm/transformer/bigint.transformer';
-import { PasswordEncrypter } from '../../../auth/domain/password-encrypter.service';
+import { MemberRoleTransformer } from '../transformer/member-role.transformer';
+import { BigintTransformer } from '../../../../global/infra/typeorm/transformer/bigint.transformer';
+import { PasswordEncrypterService } from '../../../../auth/domain/service/password-encrypter.service';
 
 @Entity()
 export class Member extends BaseTimeEntity {
@@ -42,12 +42,16 @@ export class Member extends BaseTimeEntity {
     return new Member(email, password, role, id);
   }
 
-  public static async signUpMember(email: string, password: string, encrypter: PasswordEncrypter): Promise<Member> {
+  public static async signUpMember(
+    email: string,
+    password: string,
+    encrypter: PasswordEncrypterService,
+  ): Promise<Member> {
     const hashedPassword = await encrypter.hash(password);
     return new Member(email, hashedPassword, MemberRole.MEMBER);
   }
 
-  public async isMatchPassword(password: string, encrypter: PasswordEncrypter): Promise<boolean> {
+  public async isMatchPassword(password: string, encrypter: PasswordEncrypterService): Promise<boolean> {
     return await encrypter.match(password, this.password);
   }
 
@@ -55,7 +59,7 @@ export class Member extends BaseTimeEntity {
     return this.email === email;
   }
 
-  public async resetPassword(password: string, encrypter: PasswordEncrypter): Promise<void> {
+  public async resetPassword(password: string, encrypter: PasswordEncrypterService): Promise<void> {
     this.password = await encrypter.hash(password);
   }
 }

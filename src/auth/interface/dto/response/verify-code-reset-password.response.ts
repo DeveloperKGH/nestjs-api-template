@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { AuthCode } from '../../../domain/entity/auth-code.entity';
+import { AuthCode } from '../../../infra/typeorm/entity/auth-code.entity';
 
 export class VerifyCodeResetPasswordResponse {
   @Exclude() private readonly _token: string;

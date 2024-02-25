@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ShutDownManager } from '../shutdown.manager';
-import { PasswordEncrypter } from '../../../auth/domain/password-encrypter.service';
-import { PasswordBcrypter } from '../../../auth/domain/password-bcrypter.service';
-import { RefreshTokenEncrypter } from '../../../auth/domain/refresh-token-encrypter.service';
-import { RefreshTokenBcrypter } from '../../../auth/domain/refresh-token-bcrypter.service';
+import { PasswordEncrypterServiceToken } from '../../../auth/domain/service/password-encrypter.service';
+import { PasswordBcrypterService } from '../../../auth/domain/service/password-bcrypter.service';
+import { RefreshTokenEncrypterServiceToken } from '../../../auth/domain/service/refresh-token-encrypter.service';
+import { RefreshTokenBcrypterService } from '../../../auth/domain/service/refresh-token-bcrypter.service';
 import { MemberModule } from '../../../member/member.module';
 import { EventListenerModule } from './event-listener.module';
 import { AuthModule } from '../../../auth/auth.module';
@@ -26,12 +26,12 @@ const modules = [getTypeormConnection(), WinstonConfigModule.forRoot(), EventLis
   providers: [
     ShutDownManager,
     {
-      provide: PasswordEncrypter,
-      useClass: PasswordBcrypter,
+      provide: PasswordEncrypterServiceToken,
+      useClass: PasswordBcrypterService,
     },
     {
-      provide: RefreshTokenEncrypter,
-      useClass: RefreshTokenBcrypter,
+      provide: RefreshTokenEncrypterServiceToken,
+      useClass: RefreshTokenBcrypterService,
     },
     {
       provide: APP_INTERCEPTOR,
@@ -65,12 +65,12 @@ const modules = [getTypeormConnection(), WinstonConfigModule.forRoot(), EventLis
   exports: [
     ...modules,
     {
-      provide: PasswordEncrypter,
-      useClass: PasswordBcrypter,
+      provide: PasswordEncrypterServiceToken,
+      useClass: PasswordBcrypterService,
     },
     {
-      provide: RefreshTokenEncrypter,
-      useClass: RefreshTokenBcrypter,
+      provide: RefreshTokenEncrypterServiceToken,
+      useClass: RefreshTokenBcrypterService,
     },
   ],
 })
