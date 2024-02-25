@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../../../auth/application/service/auth.service';
 import { JwtTokenService } from '../../../auth/application/service/jwt-token.service';
-import { WithdrawnMember } from '../../infra/typeorm/entity/withdrawn-member.entity';
 import { OnSafeEvent } from '../../../global/decorator/on-safe-event.decorator';
+import { WithdrawnMember } from '../../domain/model/withdrawn-member.domain';
 
 @Injectable()
 export class MemberListener {

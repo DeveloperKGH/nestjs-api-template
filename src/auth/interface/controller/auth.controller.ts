@@ -32,7 +32,7 @@ export class AuthController {
     @Body() request: VerifyCodeResetPasswordRequest,
   ): Promise<BaseResponse<VerifyCodeResetPasswordResponse>> {
     return BaseResponse.successResponse(
-      VerifyCodeResetPasswordResponse.fromEntity(
+      VerifyCodeResetPasswordResponse.fromDomain(
         await this.authService.verifyAuthCodeByResetPassword(request.toServiceDto()),
       ),
     );

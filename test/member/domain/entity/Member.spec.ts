@@ -1,12 +1,12 @@
-import { Member } from '../../../../src/member/infra/typeorm/entity/member.entity';
+import { MemberEntity } from '../../../../src/member/infra/typeorm/entity/member.entity';
 import { StringUtil } from '../../../../src/global/util/string.util';
 import { MemberRole } from '../../../../src/member/domain/enum/member-role.enum';
 import { PasswordEncrypterServiceToken } from '../../../../src/auth/domain/service/password-encrypter.service';
 
 describe('Member', () => {
-  let signUpMember: Member;
+  let signUpMember: MemberEntity;
   beforeEach(async () => {
-    signUpMember = await Member.signUpMember('developerkgh@gmail.com', 'a1234567!', mockPasswordEncrypter);
+    signUpMember = await MemberEntity.signUpMember('developerkgh@gmail.com', 'a1234567!', mockPasswordEncrypter);
   });
 
   const mockPasswordEncrypter: PasswordEncrypterServiceToken = {
@@ -20,8 +20,12 @@ describe('Member', () => {
 
   describe('signUpMember()', () => {
     it('회원 객체가 정상적으로 생성되는지 확인', async () => {
-      const member: Member = await Member.signUpMember('developerkgh@gmail.com', 'a1234567!', mockPasswordEncrypter);
-      expect(member).toBeInstanceOf(Member);
+      const member: MemberEntity = await MemberEntity.signUpMember(
+        'developerkgh@gmail.com',
+        'a1234567!',
+        mockPasswordEncrypter,
+      );
+      expect(member).toBeInstanceOf(MemberEntity);
       expect(member).toEqual(signUpMember);
     });
 

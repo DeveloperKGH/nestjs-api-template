@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { AuthCode } from '../../../infra/typeorm/entity/auth-code.entity';
+import { AuthCode } from '../../../domain/model/auth-code.domain';
 
 export class VerifyCodeResetPasswordResponse {
   @Exclude() private readonly _token: string;
@@ -13,7 +13,7 @@ export class VerifyCodeResetPasswordResponse {
     return this._token;
   }
 
-  public static fromEntity(entity: AuthCode): VerifyCodeResetPasswordResponse {
-    return new VerifyCodeResetPasswordResponse(entity.code);
+  public static fromDomain(domain: AuthCode): VerifyCodeResetPasswordResponse {
+    return new VerifyCodeResetPasswordResponse(domain.code);
   }
 }

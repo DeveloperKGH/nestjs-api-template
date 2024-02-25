@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MemberQueryRepository } from '../../../domain/repository/member-query.repository';
 import { MemberCondition } from '../../../../global/domain/repository/dto/member.condition';
 import { EntityTarget, getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
-import { Member } from '../entity/member.entity';
+import { MemberEntity } from '../entity/member.entity';
 import { MemberResponse } from '../../../interface/dto/response/member.response';
 import { plainToInstance } from 'class-transformer';
 import { PagingResponse } from '../../../../global/interface/dto/response/paging.response';
@@ -11,13 +11,16 @@ import { BadRequestException } from '../../../../global/exception/bad-request.ex
 import { TypeormBaseQueryRepository } from '../../../../global/infra/typeorm/repository/typeorm-base-query.repository';
 
 @Injectable()
-export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Member> implements MemberQueryRepository {
+export class TypeormMemberQueryRepository
+  extends TypeormBaseQueryRepository<MemberEntity>
+  implements MemberQueryRepository
+{
   public static readonly ENTITY_FIELD_NAMES = getMetadataArgsStorage()
-    .columns.filter(column => column.target === Member)
+    .columns.filter(column => column.target === MemberEntity)
     .map(column => column.propertyName);
 
-  override getName(): EntityTarget<Member> {
-    return Member.name;
+  override getName(): EntityTarget<MemberEntity> {
+    return MemberEntity.name;
   }
 
   async find(condition: MemberCondition): Promise<MemberResponse | null> {
@@ -56,7 +59,7 @@ export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Mem
     return results.map(result => plainToInstance(MemberResponse, result) as unknown as MemberResponse);
   }
 
-  private eqId(queryBuilder: SelectQueryBuilder<Member>, id?: number | null): void {
+  private eqId(queryBuilder: SelectQueryBuilder<MemberEntity>, id?: number | null): void {
     if (!id) {
       return;
     }
@@ -64,7 +67,7 @@ export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Mem
     queryBuilder.andWhere('member.id = :id', { id });
   }
 
-  private eqEmail(queryBuilder: SelectQueryBuilder<Member>, email?: string | null): void {
+  private eqEmail(queryBuilder: SelectQueryBuilder<MemberEntity>, email?: string | null): void {
     if (!email) {
       return;
     }
@@ -72,7 +75,7 @@ export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Mem
     queryBuilder.andWhere('member.email = :email', { email });
   }
 
-  private eqRole(queryBuilder: SelectQueryBuilder<Member>, role?: string | null): void {
+  private eqRole(queryBuilder: SelectQueryBuilder<MemberEntity>, role?: string | null): void {
     if (!role) {
       return;
     }
@@ -80,7 +83,7 @@ export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Mem
     queryBuilder.andWhere('member.role = :role', { role });
   }
 
-  private setOrderBy(condition: MemberCondition, queryBuilder: SelectQueryBuilder<Member>): SortEnum | null {
+  private setOrderBy(condition: MemberCondition, queryBuilder: SelectQueryBuilder<MemberEntity>): SortEnum | null {
     let idSort: SortEnum | null = null;
 
     condition.sort.forEach(sort => {
@@ -105,7 +108,7 @@ export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Mem
 
   private async getInfiniteScrollResult(
     idSort: SortEnum,
-    queryBuilder: SelectQueryBuilder<Member>,
+    queryBuilder: SelectQueryBuilder<MemberEntity>,
     condition: MemberCondition,
   ) {
     const operator = idSort === SortEnum.ASC ? '>' : '<';
@@ -126,7 +129,7 @@ export class TypeormMemberQueryRepository extends TypeormBaseQueryRepository<Mem
     );
   }
 
-  private async getPagingResult(queryBuilder: SelectQueryBuilder<Member>, condition: MemberCondition) {
+  private async getPagingResult(queryBuilder: SelectQueryBuilder<MemberEntity>, condition: MemberCondition) {
     const totalCount = await queryBuilder.getCount();
 
     queryBuilder.offset(condition.getOffset());

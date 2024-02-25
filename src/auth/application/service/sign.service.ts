@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SignUpServiceDto } from '../dto/sign-up.service.dto';
-import { Member } from '../../../member/infra/typeorm/entity/member.entity';
+
 import { MemberCommandRepository } from '../../../member/domain/repository/member-command.repository';
 import { ConflictException } from '../../../global/exception/conflict.exception';
 import { SignInServiceDto } from '../dto/sign-in.service.dto';
@@ -10,6 +10,7 @@ import { UnauthorizedException } from '../../../global/exception/unauthorized.ex
 import { PasswordEncrypterServiceToken } from '../../domain/service/password-encrypter.service';
 import { Transactional } from '../../../global/infra/typeorm/transactional.decorator';
 import { RefreshTokenEncrypterService } from '../../domain/service/refresh-token-encrypter.service';
+import { Member } from '../../../member/domain/model/member.domain';
 
 @Injectable()
 export class SignService {

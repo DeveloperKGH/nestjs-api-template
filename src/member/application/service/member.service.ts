@@ -3,7 +3,6 @@ import { CheckEmailDuplicationServiceDto } from '../dto/check-email-duplication-
 import { MemberCommandRepository } from '../../domain/repository/member-command.repository';
 import { ResetMyPasswordServiceDto } from '../dto/reset-my-password.service.dto';
 import { GlobalContextUtil } from '../../../global/util/global-context.util';
-import { Member } from '../../infra/typeorm/entity/member.entity';
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import {
   PasswordEncrypterService,
@@ -11,10 +10,11 @@ import {
 } from '../../../auth/domain/service/password-encrypter.service';
 import { BadRequestException } from '../../../global/exception/bad-request.exception';
 import { Transactional } from '../../../global/infra/typeorm/transactional.decorator';
-import { WithdrawnMember } from '../../infra/typeorm/entity/withdrawn-member.entity';
 import { WithdrawnMemberCommandRepository } from '../../domain/repository/withdrawn-member-command.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { MemberListener } from '../listener/member.listener';
+import { WithdrawnMember } from '../../domain/model/withdrawn-member.domain';
+import { Member } from '../../domain/model/member.domain';
 
 @Injectable()
 export class MemberService {

@@ -3,13 +3,11 @@ import { SendCodeResetPasswordServiceDto } from '../dto/send-code-reset-password
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import { EmailService } from '../../../global/domain/service/email.service';
 import { AuthCodeCommandRepository } from '../../domain/repository/auth-code-command.repository';
-import { AuthCode } from '../../infra/typeorm/entity/auth-code.entity';
 import { MemberCommandRepository } from '../../../member/domain/repository/member-command.repository';
 import { VerifyCodeResetPasswordServiceDto } from '../dto/verify-code-reset-password.service.dto';
 import { BadRequestException } from '../../../global/exception/bad-request.exception';
 import { AuthCodeType } from '../../domain/enum/auth-code-type.enum';
 import { TooManyRequestsException } from '../../../global/exception/too-many-requests.exception';
-import { Member } from '../../../member/infra/typeorm/entity/member.entity';
 import { Propagation, Transactional } from '../../../global/infra/typeorm/transactional.decorator';
 import { ResetPasswordServiceDto } from '../dto/reset-password.service.dto';
 import {
@@ -19,6 +17,9 @@ import {
 import { RefreshTokenServiceDto } from '../dto/refresh-token.service.dto';
 import { TokenServiceDto } from '../dto/token.service.dto';
 import { JwtTokenService } from './jwt-token.service';
+import { AuthCode } from '../../domain/model/auth-code.domain';
+import { Member } from '../../../member/domain/model/member.domain';
+import { isEmpty } from '../../../global/util/common.util';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +48,7 @@ export class AuthService {
     }
 
     const foundAuthCode = await this.authCodeCommandRepository.findAllByMemberIdAndTypeAndCreatedAtToday(
-      foundMember.id,
+      foundMember.id!,
       AuthCodeType.RESET_PASSWORD_EMAIL_AUTH_CODE,
     );
 
@@ -72,11 +73,15 @@ export class AuthService {
       throw new BadRequestException(BadRequestException.ErrorCodes.FAILED_TO_VERIFY_AUTH_CODE);
     }
 
+    if (isEmpty(foundAuthCode!.member)) {
+      throw new BadRequestException(BadRequestException.ErrorCodes.FAILED_TO_VERIFY_AUTH_CODE);
+    }
+
     foundAuthCode.verify(dto.email);
 
     await this.authCodeCommandRepository.save(foundAuthCode);
 
-    const token = AuthCode.createResetPasswordToken(foundAuthCode.member);
+    const token = AuthCode.createResetPasswordToken(foundAuthCode!.member!);
 
     return await this.authCodeCommandRepository.save(token);
   }
@@ -85,17 +90,21 @@ export class AuthService {
   async resetPassword(dto: ResetPasswordServiceDto): Promise<void> {
     const foundToken: AuthCode | null = await this.authCodeCommandRepository.findByCode(dto.token);
 
-    if (!foundToken) {
+    if (isEmpty(foundToken)) {
       throw new BadRequestException(BadRequestException.ErrorCodes.FAILED_TO_VERIFY_AUTH_CODE);
     }
 
-    foundToken.verify(dto.email);
+    if (isEmpty(foundToken!.member)) {
+      throw new BadRequestException(BadRequestException.ErrorCodes.FAILED_TO_VERIFY_AUTH_CODE);
+    }
 
-    await this.authCodeCommandRepository.save(foundToken);
+    foundToken!.verify(dto.email);
 
-    await foundToken.member.resetPassword(dto.password, this.passwordEncrypter);
+    await this.authCodeCommandRepository.save(foundToken!);
 
-    await this.memberCommandRepository.save(foundToken.member);
+    await foundToken!.member!.resetPassword(dto.password, this.passwordEncrypter);
+
+    await this.memberCommandRepository.save(foundToken!.member!);
   }
 
   @Transactional()

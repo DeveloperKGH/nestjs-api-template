@@ -1,5 +1,5 @@
-import { AuthCode } from '../../infra/typeorm/entity/auth-code.entity';
 import { AuthCodeType } from '../enum/auth-code-type.enum';
+import { AuthCode } from '../model/auth-code.domain';
 
 export interface AuthCodeCommandRepository {
   save(authCode: AuthCode): Promise<AuthCode>;

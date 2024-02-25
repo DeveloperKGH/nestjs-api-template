@@ -9,20 +9,20 @@ export abstract class TypeormBaseCommandRepository<T extends BaseEntity> {
     return GlobalContextUtil.getEntityManager().getRepository(this.getName());
   }
 
-  async save(t: T): Promise<T> {
+  async saveEntity(t: T): Promise<T> {
     return this.getRepository().save(t, { transaction: false });
   }
 
-  async findById(id: number): Promise<T | null> {
+  async findEntityById(id: number): Promise<T | null> {
     const findOption: FindOneOptions = { where: { id } };
     return this.getRepository().findOne(findOption);
   }
 
-  async remove(t: T): Promise<void> {
+  async removeEntity(t: T): Promise<void> {
     await this.getRepository().remove(t, { transaction: false });
   }
 
-  async removeAll(t: T[]): Promise<void> {
+  async removeEntities(t: T[]): Promise<void> {
     await this.getRepository().remove(t, { transaction: false });
   }
 

@@ -2,11 +2,12 @@ import { BaseTimeEntity } from '../../../../global/infra/typeorm/entity/base-tim
 import { MemberRole } from '../../../domain/enum/member-role.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { MemberRoleTransformer } from '../transformer/member-role.transformer';
-import { Member } from './member.entity';
-import { MemberCommandRepository } from '../../../domain/repository/member-command.repository';
+import { WithdrawnMember } from '../../../domain/model/withdrawn-member.domain';
+import { LocalDateTimeTransformer } from '../../../../global/infra/typeorm/transformer/local-date-time.transformer';
+import { LocalDateTime } from '@js-joda/core';
 
-@Entity()
-export class WithdrawnMember extends BaseTimeEntity {
+@Entity({ name: 'withdrawn_member' })
+export class WithdrawnMemberEntity extends BaseTimeEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   public readonly id: number;
 
@@ -19,24 +20,24 @@ export class WithdrawnMember extends BaseTimeEntity {
   @Column({ type: 'varchar', length: 10, transformer: new MemberRoleTransformer() })
   public readonly role: MemberRole;
 
-  private constructor(memberId: number, email: string, role: MemberRole) {
+  @Column({ type: 'timestamp', transformer: new LocalDateTimeTransformer(), precision: 3 })
+  public readonly joinedAt: LocalDateTime;
+
+  private constructor(memberId: number, email: string, role: MemberRole, joinedAt: LocalDateTime, id?: number) {
     super();
     this.memberId = memberId;
     this.email = email;
     this.role = role;
+    this.joinedAt = joinedAt;
+    if (id) {
+      this.id = id;
+    }
   }
-  public static of(memberId: number, email: string, role: MemberRole): WithdrawnMember {
-    return new WithdrawnMember(memberId, email, role);
+  public toDomain(): WithdrawnMember {
+    return WithdrawnMember.of(this.memberId, this.email, this.role, this.joinedAt);
   }
 
-  public static async withdrawFromMember(
-    member: Member,
-    repository: MemberCommandRepository,
-  ): Promise<WithdrawnMember> {
-    const withdrawnMember = WithdrawnMember.of(member.id, member.email, member.role);
-
-    await repository.remove(member);
-
-    return withdrawnMember;
+  public static fromDomain(domain: WithdrawnMember): WithdrawnMemberEntity {
+    return new WithdrawnMemberEntity(domain.memberId, domain.email, domain.role, domain.joinedAt);
   }
 }

@@ -1,9 +1,9 @@
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { Member } from '../../../member/infra/typeorm/entity/member.entity';
-import { WithdrawnMember } from '../../../member/infra/typeorm/entity/withdrawn-member.entity';
-import { RefreshToken } from '../../../auth/infra/typeorm/entity/refresh-token.entity';
-import { AuthCode } from '../../../auth/infra/typeorm/entity/auth-code.entity';
+import { MemberEntity } from '../../../member/infra/typeorm/entity/member.entity';
+import { WithdrawnMemberEntity } from '../../../member/infra/typeorm/entity/withdrawn-member.entity';
+import { RefreshTokenEntity } from '../../../auth/infra/typeorm/entity/refresh-token.entity';
+import { AuthCodeEntity } from '../../../auth/infra/typeorm/entity/auth-code.entity';
 
 export function getTypeormConnection() {
   return TypeOrmModule.forRootAsync({
@@ -14,7 +14,7 @@ export function getTypeormConnection() {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Member, WithdrawnMember, RefreshToken, AuthCode],
+      entities: [MemberEntity, WithdrawnMemberEntity, RefreshTokenEntity, AuthCodeEntity],
       logging: false,
       synchronize: false,
       namingStrategy: new SnakeNamingStrategy(),

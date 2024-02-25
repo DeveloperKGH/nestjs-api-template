@@ -1,4 +1,4 @@
-import { RefreshToken } from '../../infra/typeorm/entity/refresh-token.entity';
+import { RefreshToken } from '../model/refresh-token.domain';
 
 export interface RefreshTokenCommandRepository {
   save(authCode: RefreshToken): Promise<RefreshToken>;
