@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { LocalDateTimeTransformer } from '../../../../global/infra/typeorm/transformer/local-date-time.transformer';
 import { LocalDateTime } from '@js-joda/core';
 import { Member } from '../../../../member/infra/typeorm/entity/member.entity';
@@ -9,7 +9,6 @@ import { StringUtil } from '../../../../global/util/string.util';
 import { InternalServerException } from '../../../../global/exception/internal-server.exception';
 import { BadRequestException } from '../../../../global/exception/bad-request.exception';
 import { BooleanTransformer } from '../../../../global/infra/typeorm/transformer/boolean.transformer';
-import { BigintTransformer } from '../../../../global/infra/typeorm/transformer/bigint.transformer';
 import { BaseEntity } from '../../../../global/infra/typeorm/entity/base.entity';
 
 @Entity()
@@ -17,8 +16,7 @@ export class AuthCode extends BaseEntity {
   private static readonly RESET_PASSWORD_EMAIL_AUTH_CODE_EXPIRATION = 30;
   private static readonly RESET_PASSWORD_TOKEN_EXPIRATION = 10;
 
-  @Generated('increment')
-  @PrimaryColumn({ type: 'bigint', unsigned: true, transformer: new BigintTransformer() })
+  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   public readonly id: number;
 
   @ManyToOne(() => Member, { eager: true, createForeignKeyConstraints: false })

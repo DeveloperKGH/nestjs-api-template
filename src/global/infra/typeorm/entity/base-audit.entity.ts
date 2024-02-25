@@ -2,14 +2,13 @@ import { LocalDateTime } from '@js-joda/core';
 import { BeforeInsert, BeforeUpdate, Column } from 'typeorm';
 import { LocalDateTimeTransformer } from '../transformer/local-date-time.transformer';
 import { BaseEntity } from './base.entity';
-import { BigintTransformer } from '../transformer/bigint.transformer';
 import { GlobalContextUtil } from '../../../util/global-context.util';
 
 export abstract class BaseAuditEntity extends BaseEntity {
-  @Column({ type: 'bigint', unsigned: true, transformer: new BigintTransformer() })
+  @Column({ type: 'bigint', unsigned: true })
   public createdBy: number;
 
-  @Column({ type: 'bigint', unsigned: true, transformer: new BigintTransformer() })
+  @Column({ type: 'bigint', unsigned: true })
   public updatedBy: number;
 
   @Column({

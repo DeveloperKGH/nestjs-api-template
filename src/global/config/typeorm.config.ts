@@ -17,8 +17,15 @@ export function getTypeormConnection() {
       entities: [Member, WithdrawnMember, RefreshToken, AuthCode],
       logging: false,
       synchronize: false,
-      timezone: '+00:00',
       namingStrategy: new SnakeNamingStrategy(),
+      timezone: 'Z',
+      bigNumberStrings: false,
+      connectTimeout: 30000,
+      extra: {
+        waitForConnections: true,
+        connectionLimit: process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'dev' ? 10 : 30,
+        queueLimit: 0,
+      },
     }),
   });
 }

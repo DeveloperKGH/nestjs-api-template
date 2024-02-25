@@ -4,7 +4,7 @@ import { EnumResponse } from '../../../../global/interface/dto/response/enum.res
 import { MemberRole } from '../../../domain/enum/member-role.enum';
 
 export class MemberResponse {
-  @Exclude({ toPlainOnly: true }) private readonly _id: string;
+  @Exclude({ toPlainOnly: true }) private readonly _id: string | number;
   @Exclude({ toPlainOnly: true }) private readonly _email: string;
   @Exclude({ toPlainOnly: true }) public readonly _password: string;
   @Exclude({ toPlainOnly: true }) private readonly _role: string;
@@ -18,6 +18,10 @@ export class MemberResponse {
 
   @Expose()
   get id(): number {
+    if (typeof this._id === 'number') {
+      return this._id;
+    }
+
     return NumberUtil.parseInt(this._id) as number;
   }
 
