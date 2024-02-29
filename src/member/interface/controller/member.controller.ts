@@ -10,6 +10,7 @@ import { MemberCondition } from '../../../global/domain/repository/dto/member.co
 import { GlobalContextUtil } from '../../../global/util/global-context.util';
 import { NotFoundException } from '../../../global/exception/not-found.exception';
 import { ResetMyPasswordRequest } from '../dto/request/reset-my-password.request';
+import { UpdateMyInfoRequest } from '../dto/request/update-my-info.request';
 
 @Controller('/members')
 export class MemberController {
@@ -33,6 +34,15 @@ export class MemberController {
     }
 
     return BaseResponse.successResponse(result);
+  }
+
+  @Version('1')
+  @UseGuards(JwtAuthGuard)
+  @Patch('/me')
+  async updateMyInfo(@Body() request: UpdateMyInfoRequest): Promise<BaseResponse<MemberResponse>> {
+    return BaseResponse.successResponse(
+      MemberResponse.fromServiceDto(await this.memberService.updateMyInfo(request.toServiceDto())),
+    );
   }
 
   @Version('1')

@@ -7,19 +7,36 @@ export class Member {
 
   private readonly _email: string;
 
-  private _password: string | null;
+  private _password: string;
+
+  private _name: string | null;
 
   private readonly _role: MemberRole;
 
   private readonly _createdAt: LocalDateTime;
 
-  private constructor(email: string, password: string | null, role: MemberRole, createdAt: LocalDateTime);
+  private constructor(email: string, password: string, name: string | null, role: MemberRole, createdAt: LocalDateTime);
 
-  private constructor(email: string, password: string | null, role: MemberRole, createdAt: LocalDateTime, id?: number);
+  private constructor(
+    email: string,
+    password: string,
+    name: string | null,
+    role: MemberRole,
+    createdAt: LocalDateTime,
+    id?: number,
+  );
 
-  private constructor(email: string, password: string | null, role: MemberRole, createdAt: LocalDateTime, id?: number) {
+  private constructor(
+    email: string,
+    password: string,
+    name: string | null,
+    role: MemberRole,
+    createdAt: LocalDateTime,
+    id?: number,
+  ) {
     this._email = email;
     this._password = password;
+    this._name = name;
     this._role = role;
     this._createdAt = createdAt;
     this._id = id;
@@ -27,12 +44,13 @@ export class Member {
 
   public static of(
     email: string,
-    password: string | null,
+    password: string,
+    name: string | null,
     role: MemberRole,
     createdAt: LocalDateTime,
     id: number,
   ): Member {
-    return new Member(email, password, role, createdAt, id);
+    return new Member(email, password, name, role, createdAt, id);
   }
 
   public static async signUpMember(
@@ -40,8 +58,8 @@ export class Member {
     password: string,
     encrypter: PasswordEncrypterService,
   ): Promise<Member> {
-    const hashedPassword = await encrypter.hash(password);
-    return new Member(email, hashedPassword, MemberRole.MEMBER, LocalDateTime.now());
+    const hashedPassword = (await encrypter.hash(password)) as string;
+    return new Member(email, hashedPassword, null, MemberRole.MEMBER, LocalDateTime.now());
   }
 
   public async isMatchPassword(password: string, encrypter: PasswordEncrypterService): Promise<boolean> {
@@ -53,7 +71,13 @@ export class Member {
   }
 
   public async resetPassword(password: string, encrypter: PasswordEncrypterService): Promise<void> {
-    this._password = await encrypter.hash(password);
+    this._password = (await encrypter.hash(password)) as string;
+  }
+
+  public update(name: string | undefined) {
+    if (name !== undefined) {
+      this._name = name;
+    }
   }
 
   get id(): number | undefined {
@@ -64,8 +88,12 @@ export class Member {
     return this._email;
   }
 
-  get password(): string | null {
+  get password(): string {
     return this._password;
+  }
+
+  get name(): string | null {
+    return this._name;
   }
 
   get role(): MemberRole {

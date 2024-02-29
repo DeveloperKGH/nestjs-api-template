@@ -15,6 +15,9 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { MemberListener } from '../listener/member.listener';
 import { WithdrawnMember } from '../../domain/model/withdrawn-member.domain';
 import { Member } from '../../domain/model/member.domain';
+import { UpdateMyInfoServiceDto } from '../dto/update-my-info.service.dto';
+import { isEmpty } from '../../../global/util/common.util';
+import { MemberServiceDto } from '../dto/member.service.dto';
 
 @Injectable()
 export class MemberService {
@@ -69,5 +72,20 @@ export class MemberService {
     await this.withdrawnMemberCommandRepository.save(withdrawnMember);
 
     this.eventEmitter.emit(MemberListener.WITHDRAW_MEMBER_EVENT, withdrawnMember);
+  }
+
+  @Transactional()
+  async updateMyInfo(serviceDto: UpdateMyInfoServiceDto): Promise<MemberServiceDto> {
+    const foundMember = await this.memberCommandRepository.findById(GlobalContextUtil.getMember().id);
+
+    if (isEmpty(foundMember)) {
+      throw new NotFoundException(NotFoundException.ErrorCodes.NOT_FOUND_MEMBER);
+    }
+
+    foundMember!.update(serviceDto.name);
+
+    await this.memberCommandRepository.save(foundMember!);
+
+    return MemberServiceDto.fromDomain(foundMember!);
   }
 }

@@ -14,19 +14,37 @@ export class MemberEntity extends BaseTimeEntity {
   public readonly email: string;
 
   @Column({ type: 'varchar', length: 60 })
-  public password: string | null;
+  public password: string;
+
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  public readonly name: string | null;
 
   @Column({ type: 'varchar', length: 10, transformer: new MemberRoleTransformer() })
   public readonly role: MemberRole;
 
-  private constructor(email: string, password: string | null, role: MemberRole, createdAt: LocalDateTime);
+  private constructor(email: string, password: string, name: string | null, role: MemberRole, createdAt: LocalDateTime);
 
-  private constructor(email: string, password: string | null, role: MemberRole, createdAt: LocalDateTime, id?: number);
+  private constructor(
+    email: string,
+    password: string,
+    name: string | null,
+    role: MemberRole,
+    createdAt: LocalDateTime,
+    id?: number,
+  );
 
-  private constructor(email: string, password: string | null, role: MemberRole, createdAt: LocalDateTime, id?: number) {
+  private constructor(
+    email: string,
+    password: string,
+    name: string | null,
+    role: MemberRole,
+    createdAt: LocalDateTime,
+    id?: number,
+  ) {
     super();
     this.email = email;
     this.password = password;
+    this.name = name;
     this.role = role;
     this.createdAt = createdAt;
     if (id) {
@@ -35,10 +53,10 @@ export class MemberEntity extends BaseTimeEntity {
   }
 
   public toDomain(): Member {
-    return Member.of(this.email, this.password, this.role, this.createdAt, this.id);
+    return Member.of(this.email, this.password, this.name, this.role, this.createdAt, this.id);
   }
 
   public static fromDomain(domain: Member): MemberEntity {
-    return new MemberEntity(domain.email, domain.password, domain.role, domain.createdAt, domain.id);
+    return new MemberEntity(domain.email, domain.password, domain.name, domain.role, domain.createdAt, domain.id);
   }
 }
